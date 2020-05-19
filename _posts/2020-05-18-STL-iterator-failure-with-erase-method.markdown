@@ -7,6 +7,7 @@ tags: stl
 
 + **背景**  
 &emsp;对于C++ STL容器，当向容器中添加元素或从容器中删除元素时，要特别注意迭代器失效问题。  
+
 > 一个失效的迭代器将不再表示任何元素。使用失效的迭代器将产生严重的错误，可类比未初始化的指针。  
 
 举例说明：将关联容器`map<int, int>poly` 中value为0对应的的`pair<key, value>`从关联容器中删除。  
@@ -30,6 +31,7 @@ c.erase(k)   |从c中删除每个关键字为k的元素| 返回一个`size_type`
 c.erase(p)   |从c中删除迭代器p指定的元素（p必须指向真实元素，不能是`c.end()`）| 返回一个指向p之后元素的迭代器，若p指向c中的尾元素，则返回`c.end()`
 c.erase(b, e)|删除迭代器对b和e所表示的范围中的元素|返回e
 
+
 + **程序修改**  
 &emsp;可以利用`c.erase(p)`操作返回指向p之后下一个元素的特性，对上面的程序进行修改：
 ```
@@ -45,8 +47,10 @@ c.erase(b, e)|删除迭代器对b和e所表示的范围中的元素|返回e
     }
 ```  
 分析：  
-(1) 当`value==0`时，将当前迭代器iit指向的元素删除，并且将指向之后元素的迭代器重新赋值给`iit`，进入`for`的下一个循环判断；  
-(2) 否则，将`iit`指向下一个元素。  
+1. 当`value==0`时，将当前迭代器iit指向的元素删除，并且将指向之后元素的迭代器重新赋值给`iit`，进入`for`的下一个循环判断；  
+2. 否则，将`iit`指向下一个元素。  
+
+
 
 + **再修改**  
 &emsp;查询一些资料，还可以有如下更简洁的写法：  
@@ -63,7 +67,8 @@ c.erase(b, e)|删除迭代器对b和e所表示的范围中的元素|返回e
     }
 ```  
 
-&emsp;关于此处前置++和后置++的区别： 
+&emsp;关于此处前置++和后置++的区别：
+ 
 > The prefix increment operator changes an object’s state, and returns itself in the changed form. No temporary objects required.  
 ```  
 	template<typename IteratorT>
@@ -72,7 +77,8 @@ c.erase(b, e)|删除迭代器对b和e所表示的范围中的元素|返回e
 	   ++myOwnField;
 	   return (*this);
 	}
-```  
+``` 
+ 
 > A postfix operator also changes the object’s state but returns the previous state of the object. It does so by creating a temporary object.
 ```
 	template<typename IteratorT>
@@ -84,6 +90,6 @@ c.erase(b, e)|删除迭代器对b和e所表示的范围中的元素|返回e
 	}
 ```  
 
-**注意：**此处的++运算符是类运算符重载实现的，和自增运算符++有一些差别，注意区分。  
+**注意**：此处的++运算符是类运算符重载实现的，和自增运算符++有一些差别，注意区分。  
 
-&emsp;重新分析上文修改后的程序，采用PostIncrement运算符，返回给函数的只是当前迭代器iit的一个副本，在返回给函数前会将iit指向下一个元素，因此实现了将迭代器指向下一个元素的同时，删除当前所指向元素的目的。
+&emsp;重新分析上文修改后的程序，采用PostIncrement运算符，返回给函数的只是当前迭代器`iit`的一个副本，在返回给函数前会将`iit`指向下一个元素，因此实现了将迭代器指向下一个元素的同时，删除当前所指向元素的目的。
