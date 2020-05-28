@@ -51,7 +51,7 @@ tags: stl
 2. 否则，将`iit`指向下一个元素。
 
 
-+ **再修改**
++ **再修改**  
 &emsp;查询一些资料，还可以有如下更简洁的写法：  
 ```
     for (map<int, int>::iterator iit = poly.begin(); iit != poly.end(); ) {
