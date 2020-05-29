@@ -2,7 +2,7 @@
 title:  "1003 Emergency (25point(s)) (Dijsktra, Bellman-Ford, SPFA)"
 date:   2020-05-29 14:41:22 +0800
 categories: [PAT, Advanced]
-tags: dijsktra bellman-ford spfa
+tags: [dijsktra, bellman-ford, spfa]
 ---
 
 ## 问题描述
