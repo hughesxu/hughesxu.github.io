@@ -5,10 +5,13 @@ categories: [Language, C++]
 tags: stl
 ---
 
-+ **背景**  
+## 前言
+
 &emsp;对于C++ STL容器，当向容器中添加元素或从容器中删除元素时，要特别注意迭代器失效问题。  
 
 > 一个失效的迭代器将不再表示任何元素。使用失效的迭代器将产生严重的错误，可类比未初始化的指针。  
+
+## 实例代码
 
 举例说明：将关联容器`map<int, int>poly` 中`value`为0对应的的`pair<key, value>`从关联容器中删除。  
 很容易想到的写法：  
@@ -32,7 +35,8 @@ tags: stl
 `c.erase(b, e)`|删除迭代器对`b`和`e`所表示的范围中的元素|返回`e`
 
 
-+ **程序修改**  
+## 程序修改
+
 &emsp;可以利用`c.erase(p)`操作返回指向`p`之后下一个元素的特性，对上面的程序进行修改：
 ```
     for (map<int, int>::iterator iit = poly.begin(); iit != poly.end(); ) {
@@ -51,7 +55,8 @@ tags: stl
 2. 否则，将`iit`指向下一个元素。
 
 
-+ **再修改**  
+## 程序再修改
+
 &emsp;查询一些资料，还可以有如下更简洁的写法：  
 ```
     for (map<int, int>::iterator iit = poly.begin(); iit != poly.end(); ) {
