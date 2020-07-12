@@ -1,6 +1,6 @@
 ---
 title:  "Redis源码笔记-内存管理zmalloc.c"
-date:   2020-07-11 20:00:00 +0800
+date:   2020-07-12 09:00:00 +0800
 categories: [Redis, zmalloc]
 tags: [Redis]
 ---
@@ -38,7 +38,7 @@ void zlibc_free(void *ptr);
 
 Linux环境下编译情况下，从`Makefile`可以看出是默认使用`jemalloc`的，编译时加上的宏定义为`-DUSE_JEMALLOC`。  
 内存分配器本身通常是能保证分配的内存是字节对齐的，如果需要分配的内存大小不满足内存对齐，则分配分配器再多分配几个填充字节(`Padding Bytes`)保证字节对齐。另外，部分内存分配器在分配内存的时候也会多分配一部分内存用于存储分配空间的大小，此部分空间通常为内存分配器返回地址的前几个字节（4/8 Bytes），空间示意图如下图所示。(借助于此，`free`函数也便能得到需要释放空间大小)  
-![malloc memory]({{ "/assets/img/sample/malloc_memory.jpeg"| relative_url }})
+![malloc memory]({{ "/assets/img/sample/malloc_memory.jpg"| relative_url }})
 
 
 `jemalloc/tcmalloc/malloc(GNU C)`函数都提供了计算已分配内存大小函数，所以不需要单独分配空间来存储已分配空间大小，而对于其他不具有此类函数的方法，需要额外分配一段空间，长度为`PREFIX_SIZE`。当使用相应的内存分配器时，用对应的内存分配器函数覆盖`malloc/free`函数即可。总结各种情况下的需要包含的头文件以及宏定义，列举如下：  
@@ -94,7 +94,7 @@ Linux环境下编译情况下，从`Makefile`可以看出是默认使用`jemallo
 自定义的`zmalloc`函数根据内存分配器是否提供计算分配空间大小函数，有两个程序分支：  
 * `defined(HAVE_MALLOC_SIZE)`: 使用内存分配器自带的`zmalloc_size`函数(已被覆盖为内存分配器对应的函数)完成分配空间大小的计算。对于Linux系统而言，`zmalloc_size`对应`malloc_usable_size`，此函数返回值不包含首部长度。  
 * `not defined(HAVE_MALLOC_SIZE)`: 多分配`PREFIX_SIZE`(对于64位机器为8字节)的内存用于分配空间的存储。值得注意的是，此时记录的分配空间大小不包含`PREFIX_SIZE`和用于字节对齐的空间。内存分配的示意图如下图所示。  
-![zmalloc memory]({{ "/assets/img/sample/zmalloc_memory.jpeg"| relative_url }})
+![zmalloc memory]({{ "/assets/img/sample/zmalloc_memory.jpg"| relative_url }})
 
 `update_zmalloc_stat_alloc()`函数的作用是，获得真正分配的内存空间大小，并更新全局变量`used_memory`。此处，考虑到了`malloc()`中存在的内存对齐行为，所以将内存大小圆整到`sizeof(long)`的值。
 
