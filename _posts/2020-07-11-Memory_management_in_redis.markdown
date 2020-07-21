@@ -92,8 +92,10 @@ Linux环境下编译情况下，从`Makefile`可以看出是默认使用`jemallo
 ### zmalloc()
 
 自定义的`zmalloc`函数根据内存分配器是否提供计算分配空间大小函数，有两个程序分支：  
-* `defined(HAVE_MALLOC_SIZE)`: 使用内存分配器自带的`zmalloc_size`函数(已被覆盖为内存分配器对应的函数)完成分配空间大小的计算。对于Linux系统而言，`zmalloc_size`对应`malloc_usable_size`，此函数返回值不包含首部长度。  
-* `not defined(HAVE_MALLOC_SIZE)`: 多分配`PREFIX_SIZE`(对于64位机器为8字节)的内存用于分配空间的存储。值得注意的是，此时记录的分配空间大小不包含`PREFIX_SIZE`和用于字节对齐的空间。内存分配的示意图如下图所示。  
+* `defined(HAVE_MALLOC_SIZE)`:   
+使用内存分配器自带的`zmalloc_size`函数(已被覆盖为内存分配器对应的函数)完成分配空间大小的计算。对于Linux系统而言，`zmalloc_size`对应`malloc_usable_size`，此函数返回值不包含首部长度。  
+* `not defined(HAVE_MALLOC_SIZE)`:   
+多分配`PREFIX_SIZE`(对于64位机器为8字节)的内存用于分配空间的存储。值得注意的是，此时记录的分配空间大小不包含`PREFIX_SIZE`和用于字节对齐的空间。内存分配的示意图如下图所示。  
 ![zmalloc memory]({{ "/assets/img/sample/zmalloc_memory.jpg"| relative_url }})
 
 `update_zmalloc_stat_alloc()`函数的作用是，获得真正分配的内存空间大小，并更新全局变量`used_memory`。此处，考虑到了`malloc()`中存在的内存对齐行为，所以将内存大小圆整到`sizeof(long)`的值。
@@ -122,9 +124,10 @@ void *zmalloc(size_t size) {
 
 ### zmalloc_size() and zmalloc_usable()
 
-针对内存分配器不提供计算分配空间大小函数的情况，自定义了`zmalloc_size`函数。注意此处，作为函数参数传入的指针`ptr`指向指向实际分配的可使用内存的起始地址，已经在首部地址上偏移了首部的长度。函数返回值同样考虑到内存对齐，因此返回的内存分配大小为：`PREFIX_SIZE + size + Padding_bytes_size`。
+针对内存分配器不提供计算分配空间大小函数的情况，自定义了`zmalloc_size`函数。注意此处，作为函数参数传入的指针`ptr`指向指向实际分配的可使用内存的起始地址，已经在首部地址上偏移了首部的长度。函数返回值同样考虑到内存对齐，因此返回的内存分配大小为：  
+&emsp;`PREFIX_SIZE + size + Padding_bytes_size`。
 
-`zmalloc_usable`函数返回分配空间中可用的大小，即将首部`PREFIX_SIZE`排除在外。
+`zmalloc_usable()`函数返回分配空间中可用的大小，即将首部`PREFIX_SIZE`排除在外。
 
 ```
 /* Provide zmalloc_size() for systems where this function is not provided by
@@ -147,11 +150,13 @@ size_t zmalloc_usable(void *ptr) {
 ```
 
 
-### zfree
+### zfree()
 
 `zfree`函数和`zmalloc`函数对应，用于将分配的内存空间释放。同样根据实际选择的内存分配器分为了两个程序分支：  
-* `defined(HAVE_MALLOC_SIZE)`: 使用内存分配器自带的`zmalloc_size`函数获得分配的内存空间大小，传入`update_zmalloc_stat_free()`更新全局变量`used_memory`。  
-* `not defined(HAVE_MALLOC_SIZE)`: 根据传入的指针`ptr`和已知首部偏移`PREFIX_SIZE`计算出首部的起始地址，也即整个分配空间的起始地址（参考上述分配过程`zmalloc()`）。同样更新了全局变量`used_memory`。
+* `defined(HAVE_MALLOC_SIZE)`:   
+&emsp;使用内存分配器自带的`zmalloc_size`函数获得分配的内存空间大小，传入`update_zmalloc_stat_free()`更新全局变量`used_memory`。  
+* `not defined(HAVE_MALLOC_SIZE)`:   
+&emsp;根据传入的指针`ptr`和已知首部偏移`PREFIX_SIZE`计算出首部的起始地址，也即整个分配空间的起始地址（参考上述分配过程`zmalloc()`）。同样更新了全局变量`used_memory`。
  
 ```
 #define update_zmalloc_stat_free(__n) do { \
@@ -179,3 +184,17 @@ void zfree(void *ptr) {
 #endif
 }
 ```
+
+### zmalloc_get_rss()
+
+`zmalloc_get_rss()`用来获得redis进程的`RSS`信息，`RSS`信息是指进程实际使用的内存大小。对于linux系统而言，通过文件系统中`/proc/pid/stat`文件获得，此文件也是`ps`命令获取进程信息的来源，该文件中`rss`信息表述为内存页的数量，具体如下： 
+```
+rss  %ld
+    Resident Set Size: number of pages the process has
+    in real memory.  This is just the pages which count
+    toward text, data, or stack space.  This does not
+    include pages which have not been demand-loaded in,
+    or which are swapped out.
+``` 
+
+`zmalloc_get_rss()`通过读取`proc/pid/stat`文件中的第`24`个字段，与系统运行时内存页大小相乘，获得实际使用的内存大小，单位为`KBytes`。
