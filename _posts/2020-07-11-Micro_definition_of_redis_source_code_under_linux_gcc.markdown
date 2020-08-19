@@ -28,6 +28,11 @@ Redis源代码中借助自定义宏定义完成了许多程序分支的分离，
 
 #define rdb_fsync_range(fd,off,size) sync_file_range(fd,off,size,SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE)
 
+#define USE_SETPROCTITLE
+#define INIT_SETPROCTITLE_REPLACEMENT
+void spt_init(int argc, char *argv[]);
+void setproctitle(const char *fmt, ...);
+
 #include <sys/types.h> /* This will likely define BYTE_ORDER */
 
 # include <endian.h>
