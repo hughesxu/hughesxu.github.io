@@ -49,7 +49,8 @@ void serverLog(int level, const char *fmt, ...) {
 利用了`va_list`、`va_start`、`va_end`等函数对可变参数进行了支持，其原理是利用函数参数在栈中的空间排布，栈空间排布和`va_list`的操作如下图所示：  
 ![Variadic Macros]({{ "/assets/img/sample/variadic_macros.jpg"| relative_url }})
 
-`int vsnprintf (char * s, size_t n, const char * format, va_list arg)`函数利用可变参数列表来格式化字符串，把字符串保存在`s`指向的空间中。 
+`int vsnprintf (char * s, size_t n, const char * format, va_list arg)`, 函数利用可变参数列表来格式化字符串，把字符串保存在`s`指向的空间中。  
+`Write formatted data from variable argument list to sized buffer`  
 
 ### serverLogRaw()
 
