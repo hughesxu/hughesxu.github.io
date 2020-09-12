@@ -5,7 +5,10 @@ categories: [Linux, driver]
 tags: [Linux, driver model]
 ---
 
-## sysfs文件系统和Linux设备模型
+## Linux设备驱动模型和sysfs文件系统
+
+Linux内核在2.6版本中引入设备驱动模型，简化了驱动程序的编写。Linux设备驱动模型包含**设备(device)**、**总线(bus)**、**类(class)**和**驱动(driver)**，它们之间相互关联。其中**设备(device)**和**驱动(driver)**通过**总线(bus)**绑定在一起。  
+Linux内核中，分别用`bus_type`、`device_driver`和`device`结构来描述总线、驱动和设备，结构体定义详见`linux/device.h`。设备和对应的驱动必须依附于同一种总线，因此`device_driver`和`device`结构中都包含`struct bus_type`指针。
 
 **Linux sysfs**是一个虚拟的文件系统，它把连接在系统上的设备和总线组织成为一个分级的文件，可以由用户空间存取，向用户空间导出内核数据结构以及它们的属性。  
 `sysfs`展示出设备驱动模型中各个组件的层次关系，某个系统上的`sysfs`顶层目录展示如下：  
@@ -26,26 +29,22 @@ drwxr-xr-x   2 root root 0 Aug 20 15:27 power/
 ```
 
 重要子目录介绍：  
-* `block`:  包含所有的块设备，如`ram`，`sda`等  
-* `bus`:    包含系统中所有的总线类型，如`pci`，`usb`，`i2c`等  
-* `class`:  包含系统中的设备类型，如`input`，`pci_bus`，`mmc_host`等  
-* `dev`:    包含两个子目录：`char`和`block`，分别存放字符设备和块设备的主次设备号(major:minor)，指向`/sys/devices`目录下的设备  
-* `devices`:包含系统所有的设备  
++ `block`:  包含所有的块设备，如`ram`，`sda`等  
++ `bus`:    包含系统中所有的总线类型，如`pci`，`usb`，`i2c`等  
++ `class`:  包含系统中的设备类型，如`input`，`pci_bus`，`mmc_host`等  
++ `dev`:    包含两个子目录：`char`和`block`，分别存放字符设备和块设备的主次设备号(major:minor)，指向`/sys/devices`目录下的设备  
++ `devices`:包含系统所有的设备  
 
 `sysfs`中显示的每一个对象都对应一个`kobject`结构（完整定义位于`linux/kobject.h`，结构内部包含一个`parent`指针），而另一个相联系的结构为`kset`。`kset`是嵌入相同类型结构的`kobject`对象的集合。 
-内核用`kobject`、`kset`和`parent`之间的关系将各个对象连接起来组成一个分层的结构体系，从而与模型化的子系统相匹配。
+内核用`kobject`、`kset`和`parent`之间的关系将各个对象连接起来组成一个分层的结构体系，从而与模型化的子系统相匹配。（有机会详细介绍）
  
-Linux 设备驱动模型包含**设备(device)**、**总线(bus)**、**类(class)**和**驱动(driver)**，它们之间相互关联。其中**设备(device)**和**驱动(driver)**通过**总线(bus)**绑定在一起。
- 
-Linux内核中，分别用`bus_type`、`device_driver`和`device`结构来描述总线、驱动和设备，结构体定义详见`linux/device.h`。设备和对应的驱动必须依附于同一种总线，因此`device_driver`和`device`结构中都包含`struct bus_type`指针。
- 
-`sysfs`中能清晰地看出`device`、`driver`和`bus`的相互联系，以某系统上的`pci`总线上的`igb`驱动为例。 
-`/sys/bus/pci/`下存在`devices`和`drivers`两个目录，分别包含了依附于`pci`总线上的设备和驱动。进入`igb`驱动目录，可以发现存在指向设备的指针。  
+`sysfs`中能清晰地看出`device`、`driver`和`bus`的相互联系，以某系统上`pci`总线上的`igb`驱动为例。 
+`/sys/bus/pci/`下存在`devices`和`drivers`两个目录，分别包含了依附于`pci`总线上的设备和驱动。进入`igb`驱动目录，可以发现存在指向设备的链接。  
 ```
 /sys/bus/pci/drivers/igb$ ll
 total 0
-... root root    0 Sep  2 17:08 0000:07:00.0 -> ../../../../devices/pci0000:00/0000:00:1c.4/0000:07:00.0/
-... root root    0 Sep  2 17:08 0000:07:00.1 -> ../../../../devices/pci0000:00/0000:00:1c.4/0000:07:00.1/
+...   0 Sep  2 17:08 0000:07:00.0 -> ../../../../devices/pci0000:00/0000:00:1c.4/0000:07:00.0/
+...   0 Sep  2 17:08 0000:07:00.1 -> ../../../../devices/pci0000:00/0000:00:1c.4/0000:07:00.1/
 ... 
 ```
 对应地，在`/sys/devices/`目录下，可以看到设备存在一个指向`igb`的`driver`项：  
@@ -56,18 +55,18 @@ total 0
 lrwxrwxrwx  1 root root       0 Aug 20 15:27 driver -> ../../../../bus/pci/drivers/igb/
 ...
 ```
-同样地，`/sys/bus/pci/devices`目录下可以找到指向同样设备的一个指针：  
+同样地，`/sys/bus/pci/devices`目录下可以找到指向同样设备的一个链接：  
 ```
 /sys/bus/pci/devices$ ll
 total 0
 ...
-lrwxrwxrwx 1 root root 0 Aug 20 15:27 0000:07:00.0 -> ../../../devices/pci0000:00/0000:00:1c.4/0000:07:00.0/
-lrwxrwxrwx 1 root root 0 Aug 20 15:27 0000:07:00.1 -> ../../../devices/pci0000:00/0000:00:1c.4/0000:07:00.1/
+...   0 Aug 20 15:27 0000:07:00.0 -> ../../../devices/pci0000:00/0000:00:1c.4/0000:07:00.0/
+...   0 Aug 20 15:27 0000:07:00.1 -> ../../../devices/pci0000:00/0000:00:1c.4/0000:07:00.1/
 ...
 ```
 
-对于未包含设备驱动模型的`Linux`内核来说，通常在驱动代码中`xxx_driver`注册过程中调用`probe()`函数来对设备进行初始化。  
-在`Linux`设备驱动模型下，设备和驱动可以分开注册，依赖总线完成相互绑定。系统每注册一个设备的时候，会寻找与之匹配的驱动；相反，系统每注册一个驱动的时候，会寻找与之匹配的设备。这个过程中，设备和驱动的匹配工作由总线完成。
+对于早期的Linux内核（2.6版本以前）来说，通常在驱动代码中`xxx_driver`注册过程中调用`probe()`函数来对设备进行初始化。  
+引入Linux设备驱动模型下，设备和驱动可以分开注册，依赖总线完成相互绑定。系统每注册一个设备的时候，会寻找与之匹配的驱动；相反，系统每注册一个驱动的时候，会寻找与之匹配的设备。这个过程中，设备和驱动的匹配工作由总线完成。
 
 下文中将会用关键的内核源码说明驱动和设备间匹配机制的实现，分析的过程中以`platform`总线为例。  
 `platform`总线是一种虚拟的总线，与之相对应的是`PCI`、`I2C`、`SPI`等实体总线。引入虚拟`platform`总线是为了解决某些设备无法直接依附在现有实体总线上的问题，例如SoC系统中集成的独立外设控制器，挂接在SoC内存空间的外设等等。  
@@ -77,13 +76,13 @@ lrwxrwxrwx 1 root root 0 Aug 20 15:27 0000:07:00.1 -> ../../../devices/pci0000:0
 
 `platform`总线作为Linux的基础总线，在内核启动阶段便完成了注册，注册的入口函数为`platform_bus_init()`。内核启动阶段调用该函数的路径为：  
 ```
-start_kernel() --> arch_call_rest_init()[last step in start_kernel] 
-    --> rest_init() --> kernel_init() 
-    --> kernel_init_freeable() --> do_basic_setup() 
-    --> driver_init() --> platform_bus_init()
+start_kernel()                  --> arch_call_rest_init()[last step in start_kernel] 
+    --> rest_init()             --> kernel_init() 
+    --> kernel_init_freeable()  --> do_basic_setup() 
+    --> driver_init()           --> platform_bus_init()
 ```
 
-`Linux`内核中定义了`platform_bus_type`结构体来描述`platform`总线，同时也定义了设备`platform_bus`，用于管理所有挂载在`platform`总线下的设备，定义如下：  
+Linux内核中定义了`platform_bus_type`结构体来描述`platform`总线，同时也定义了设备`platform_bus`，用于管理所有挂载在`platform`总线下的设备，定义如下：  
 ```
 struct bus_type platform_bus_type = {
     .name               = "platform",
@@ -99,7 +98,9 @@ struct device platform_bus = {
 };
 ```
 
-`platform_bus_init()`对`platform`总线的注册主要分为两步: (1) `device_register(&platform_bus)`，(2) `bus_register(&platform_bus_type)`。  
+`platform_bus_init()`对`platform`总线的注册主要分为两步：  
++ `device_register(&platform_bus)`
++ `bus_register(&platform_bus_type)`。  
 ```
 int __init platform_bus_init(void)
 {
@@ -133,8 +134,8 @@ int device_register(struct device *dev)
     return device_add(dev);     // add device to device hierarchy
 }
 ```  
-* `device_initialize()`对`struct device`中基本成员进行初始化，包括`kobject`、`struct device_private`、`struct mutex`等。  
-* `device_add(dev)`将`platform`总线也作为一个设备`platform_bus`注册到驱动模型中，重要的函数包括`device_create_file()`、`device_add_class_symlinks()`、`bus_add_device()`、`bus_probe_device()`等，下文中对设备注册的介绍一节，将对这个函数做更详细的介绍。`device_add(&platform_bus)`主要功能是完成`/sys/devices/platform`目录的建立。
+* `device_initialize()`：对`struct device`中基本成员进行初始化，包括`kobject`、`struct device_private`、`struct mutex`等。  
+* `device_add(dev)`：将`platform`总线也作为一个设备`platform_bus`注册到驱动模型中，重要的函数包括`device_create_file()`、`device_add_class_symlinks()`、`bus_add_device()`、`bus_probe_device()`等，下文中对设备注册的介绍一节，将对这个函数做更详细的介绍。`device_add(&platform_bus)`主要功能是完成`/sys/devices/platform`目录的建立。
 
 ### bus_register(&platform_bus_type)
 
@@ -188,7 +189,7 @@ int bus_register(struct bus_type *bus)
     return 0;
 }
 ```  
-`bus_register(&platform_bus_type)`将总线`platform`注册到`Linux`的总线系统中，主要完成了`subsystem`的注册，对`struct subsys_private`结构进行了初始化，具体包括：  
+`bus_register(&platform_bus_type)`将总线`platform`注册到Linux的总线系统中，主要完成了`subsystem`的注册，对`struct subsys_private`结构进行了初始化，具体包括：  
 * `platform_bus_type->p->drivers_autoprobe = 1`  
 * 对`struct kset`类型成员`subsys`进行初始化，作为子系统中`kobject`对象的`parent`。`kset`本身也包含`kobject`对象，在`sysfs`中也表现为一个目录，即`/sys/bus/platform`。  
 * 建立`struct kset`类型的`drivers_kset`和`devices_kset`，作为总线下挂载的所有驱动和设备的集合，`sysfs`中表现为`/sys/bus/platform/drivers`和`/sys/bus/platform/devices`。  
@@ -232,9 +233,9 @@ struct bus_type platform_bus_type = {
         }
         /* key point for driver to autoprobe device, set in bus_register() */
         . drivers_autoprobe = 1
-
+        klist_init(&priv->klist_devices, klist_devices_get, klist_devices_put);
+        klist_init(&priv->klist_drivers, NULL, NULL);
         .devices_kset = kset_create_and_add("devices", NULL, &.p->subsys.kobj);
-
         /* .drivers_kset = kset_create_and_add("drivers", NULL, &.p->subsys.kobj) */
         .drivers_kset = {
             .kobj = {
@@ -269,7 +270,7 @@ struct bus_type platform_bus_type = {
 
 ## platform驱动的注册
 
-`Linux`内核中对依赖于`platform`总线的驱动定义了`platform_driver`结构体，内部封装了前述的`struct device_driver`。  
+Linux内核中对依赖于`platform`总线的驱动定义了`platform_driver`结构体，内部封装了前述的`struct device_driver`。  
 ```
 struct platform_driver {
     int (*probe)(struct platform_device *);
@@ -315,7 +316,7 @@ int __platform_driver_register(struct platform_driver *drv,
 }
 ```
 
-### driver_register(&globalfifo_driver->driver)
+### driver_register(&(globalfifo_driver.driver))
 ```
 /*****  drivers/base/driver.c  *****/
 /**
@@ -354,15 +355,15 @@ int driver_register(struct device_driver *drv)
     return ret;
 }
 ```
-`driver_register(&globalfifo_driver->driver)`主要的工作包括：  
-* 确认驱动依附的总线`platform_bus`已经被注册并初始化（必要条件）。  
-* 对`probe`、`remove`、`shutdown`等回调函数初始化进行判断，保证总线和驱动上相应的函数只能存在一个。  
-* `driver_find()`查找总线上是否已存在当前驱动的同名驱动。  
-* `bus_add_driver(&globalfifo_driver->driver)`，将驱动注册到总线上，下文详述。  
-* 发起`KOBJ_ADD`类型`uevent`，指示驱动已经添加完成，TODO。  
+`driver_register(&(globalfifo_driver.driver))`主要的工作包括：  
++ 确认驱动依附的总线`platform_bus`已经被注册并初始化（必要条件）。  
++ 对`probe`、`remove`、`shutdown`等回调函数初始化进行判断，保证总线和驱动上相应的函数只能存在一个。  
++ `driver_find()`查找总线上是否已存在当前驱动的同名驱动。  
++ `bus_add_driver(&(globalfifo_driver.driver))`，将驱动注册到总线上，下文详述。  
++ 发起`KOBJ_ADD`类型`uevent`，指示驱动已经添加完成，TODO。  
 
 
-### bus_add_driver(&globalfifo_driver->driver)
+### bus_add_driver(&(globalfifo_driver.driver))
 ```
 /*****  drivers/base/bus.c  *****/
 /**
@@ -403,13 +404,13 @@ int bus_add_driver(struct device_driver *drv)
     return 0;
 }
 ```
-`bus_add_driver(&globalfifo_driver->driver)`的主要工作包括：  
-* 为`struct device_driver`中结构`struct driver_private`动态分配空间，并完成后者`kobject`对象初始化。对应地，在`/sys/bus/platform/drivers`下建立目录`globalfifo_platform`。  
-* 初始化`klist_devices`链表，用来维护驱动相关联的设备。对应`sysfs`中在每个驱动目录下关联的设备。  
-* `klist_add_tail()`将当前驱动加入到总线对应的`klist_drivers`链表中。  
-* 如果总线使能`drivers_autoprobe`，将调用`driver_attach()`尝试匹配设备。下文中将详述此过程。  
-* `module_add_driver(drv->owner, drv)`通过`sysfs_create_link()`，在`globalfifo_platform`目录下新建`module`项指向`/sys/module/globalfifo_platform`。同时，也在`/sys/module/globalfifo_platform/`目录下新建`driver`目录，建立`bus->name:drv->name` 链接到`/sys/bus/platform/drivers/globalfifo_platform`。  
-* `uevent`设置。  
+`bus_add_driver(&(globalfifo_driver.driver))`的主要工作包括：  
++ 为`struct device_driver`中结构`struct driver_private`动态分配空间，并完成后者`kobject`对象初始化。对应地，在`/sys/bus/platform/drivers`下建立目录`globalfifo_platform`。  
++ 初始化`klist_devices`链表，用来维护驱动相关联的设备。对应`sysfs`中在每个驱动目录下关联的设备。  
++ `klist_add_tail()`将当前驱动加入到总线对应的`klist_drivers`链表中。  
++ 如果总线使能`drivers_autoprobe`，将调用`driver_attach()`尝试匹配设备。下文中将详述此过程。  
++ `module_add_driver(drv->owner, drv)`通过`sysfs_create_link()`，在`globalfifo_platform`目录下新建`module`项指向`/sys/module/globalfifo_platform`。同时，也在`/sys/module/globalfifo_platform/`目录下新建`driver`目录，建立`bus->name:drv->name` 链接到`/sys/bus/platform/drivers/globalfifo_platform`。  
++ `uevent`设置。  
 
 初始化后`globalfifo_driver`结构主要的成员列举如下：  
 ```
@@ -446,7 +447,7 @@ static struct platform_driver globalfifo_driver = {
 };
 ```
 
-### driver_attach(&globalfifo_driver->driver)
+### driver_attach(&(globalfifo_driver.driver))
 ```
 /*****  drivers/base/dd.c  *****/
 /**
@@ -486,8 +487,8 @@ int bus_for_each_dev(struct bus_type *bus, struct device *start,
 ```
 `driver_attach()`函数找到驱动依附的总线信息，遍历总线上链表`klist_devices`得到当前总线上存在的设备，然后调用`__driver_attach(dev, drv)`函数，尝试将驱动和设备绑定。  
 `__driver_attach(dev, drv)`函数包含两个主要的部分：  
-* driver_match_device(drv, dev) : 尝试将驱动和设备匹配，返回值指示是否能匹配。  
-* device_driver_attach(drv, dev): 将驱动和设备绑定。  
+* `driver_match_device(drv, dev)` : 尝试将驱动和设备匹配，返回值指示是否能匹配。  
+* `device_driver_attach(drv, dev)`: 将驱动和设备绑定。  
 
 ```
 static int __driver_attach(struct device *dev, void *data)
@@ -648,7 +649,7 @@ static int really_probe(struct device *dev, struct device_driver *drv)
 `really_probe(dev, drv)`主要完成的工作包括：  
 * 将设备`struct device`中`driver`指针指向`globalfifo_driver->driver`。  
 * `driver_sysfs_add(dev)`完成`sysfs`中设备和驱动的链接，包括在驱动目录下建立到设备的链接，和在设备目录下建立到驱动的链接。  
-* 设备`probe`函数的调用：优先使用`bus->probe`函数，其次使用`drv->probe`函数。对于`globalfifo_driver`，会回调`globalfifo_probe()`，完成设备的初始化。  
+* **设备`probe`函数的调用：优先使用`platform_device->bus->probe`函数，其次使用`platform_driver->probe`函数。对于`globalfifo_driver`，会回调`globalfifo_probe()`，完成设备的初始化。**  
 * `driver_bound(dev)`将设备添加到驱动维护的设备链表中，并发起`KOBJ_BIND`事件。  
 
 
@@ -680,7 +681,7 @@ static struct platform_device globalfifo_device = {
     .name       = "globalfifo_platform",
     .id         = -1,
 };
-```
+```  
 对设备`globalfifo_device`进行注册的入口函数为`platform_device_register(&globalfifo_device)`。  
 ```
 int platform_device_register(struct platform_device *pdev)
@@ -690,7 +691,8 @@ int platform_device_register(struct platform_device *pdev)
     return platform_device_add(pdev);
 }
 ```
-其中`device_initialize(&pdev->dev)`在第一节`platform_bus`注册中也提到过，主要`对`struct device`中基本成员进行初始化，包括`kobject`、`struct device_private`、`struct mutex`等。着重介绍`platform_device_add(pdev)`。  
+ 
+其中`device_initialize(&pdev->dev)`在第一节`platform_bus`注册中也提到过，主要对`struct device`中基本成员进行初始化，包括`kobject`、`struct device_private`、`struct mutex`等。着重介绍`platform_device_add(pdev)`。  
 
 
 ### platform_device_add(&globalfifo_device)
@@ -833,7 +835,7 @@ int device_add(struct device *dev)
 * `globalfifo_device.dev.kobj.parent`初始化为`&platform_bus.kobj`。  
 * `kobject_add()`函数初始化`globalfifo_device.dev.kobj`对象，在`sysfs`中建立相关的目录，例如`/sys/devices/platform/globalfifo_platform`。  
 * `bus_add_device(&globalfifo_device.dev)`：将`globalfifo_device`注册到总线系统里，并建立`sysfs`的相关目录：总线系统中建立到设备的链接，同时也在设备目录下建立到总线的`subsystem`链接。  
-* `bus_probe_device(dev)`：尝试在总线上寻找可以绑定的驱动。
+* `bus_probe_device(dev)`：尝试在总线上寻找可以绑定的驱动。下文详细介绍。  
 
 `globalfifo_devices`初步初始化后主要成员列举如下：  
 ```
@@ -963,7 +965,7 @@ static int __device_attach_driver(struct device_driver *drv, void *_data)
         .want_async = false,
     };
     struct device_driver *drv;
-
+---------------------------------------------------
         bus_probe_device(dev)
                 |
                 V
@@ -986,9 +988,11 @@ static int __device_attach_driver(struct device_driver *drv, void *_data)
 ## 总结
 
 综上述分析，可以看到驱动注册的过程中，会尝试寻找总线上可以与之匹配的设备；同样地，设备注册的过程中，也会尝试寻找总线上可以与之绑定的驱动。整个过程中，总线、设备、驱动的关键注册函数分别为：
-* 总线注册：bus_register()  
-* 驱动注册：platform_driver_register() --> driver_register() --> bus_add_driver()  
-* 设备注册：platform_device_add() --> device_add() --> bus_add_device() / bus_probe_device() 
+* 总线注册：`bus_register()`  
+* 驱动注册：`platform_driver_register() --> driver_register() --> bus_add_driver()`  
+* 设备注册：`platform_device_add() --> device_add() --> bus_add_device() / bus_probe_device()` 
+
+![Driver Model]({{ "/assets/img/sample/device_driver_model.svg"| relative_url }})
 
 从`sysfs`的角度，可以清楚地看到`platform_device`、`platform_driver`、`platform_bus`之间的联系：  
 ```
