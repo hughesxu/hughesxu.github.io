@@ -13,7 +13,7 @@ title: Huey's Blog
 
 tagline: Move on, to discover!  # it will display as the sub-title
 
-description: >-                        # used by seo meta and the atom feed
+description: http://hughesxu.github.io                        # used by seo meta and the atom feed
 
 # Replace with the website url, e.g. 'https://username.github.io'
 url: 'http://hughesxu.github.io'
@@ -58,7 +58,7 @@ google_analytics:
 
   pv:
     # DO NOT enable it unless you know how to deploy the Google Analytics superProxy.
-    enabled: false
+    enabled: true
     # the next options only valid when `google_analytics.pv` is enabled.
     proxy_url: ''
     proxy_endpoint: ''
