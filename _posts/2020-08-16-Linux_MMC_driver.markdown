@@ -182,7 +182,7 @@ static __init int xxx_mmc_init(void)
     return err;
 }
 ```
-从代码中看到，驱动入口函数中将注册`platform_driver`和`platform_device`，`name`均定义为`xxx_mmc_drv`。根据驱动模型，最终会回调`xxx_mmc_driver`中的`probe()`函数：`xxx_mmc_probe()`。  
+从代码中看到，驱动入口函数中将注册`platform_driver`和`platform_device`，`name`均定义为`xxx_mmc`。根据驱动模型，最终会回调`xxx_mmc_driver`中的`probe()`函数：`xxx_mmc_probe()`。  
 
 ### 4.1 xxx_mmc_probe(pdev)
 ```
