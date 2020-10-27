@@ -38,7 +38,7 @@ void zlibc_free(void *ptr);
 
 Linux环境下编译情况下，从`Makefile`可以看出是默认使用`jemalloc`的，编译时加上的宏定义为`-DUSE_JEMALLOC`。  
 内存分配器本身通常是能保证分配的内存是字节对齐的，如果需要分配的内存大小不满足内存对齐，则分配分配器再多分配几个填充字节(`Padding Bytes`)保证字节对齐。另外，部分内存分配器在分配内存的时候也会多分配一部分内存用于存储分配空间的大小，此部分空间通常为内存分配器返回地址的前几个字节（4/8 Bytes），空间示意图如下图所示。(借助于此，`free`函数也便能得到需要释放空间大小)  
-![malloc memory]({{ "/assets/img/sample/malloc_memory.jpg"| relative_url }})
+![malloc memory]({{ "/assets/img/sample/malloc_memory.jpg"| relative_url }}){:height="75%" width="75%"}
 
 
 `jemalloc/tcmalloc/malloc(GNU C)`函数都提供了计算已分配内存大小函数，所以不需要单独分配空间来存储已分配空间大小，而对于其他不具有此类函数的方法，需要额外分配一段空间，长度为`PREFIX_SIZE`。当使用相应的内存分配器时，用对应的内存分配器函数覆盖`malloc/free`函数即可。总结各种情况下的需要包含的头文件以及宏定义，列举如下：  

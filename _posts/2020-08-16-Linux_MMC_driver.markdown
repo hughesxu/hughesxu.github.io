@@ -10,7 +10,7 @@ tags: [Linux, mmc]
 块设备是Linux系统中的基础外设之一，而MMC/SD存储设备是一种典型的块设备。Linux内核设计了MMC子系统，用于管理MMC/SD设备。
 
 MMC子系统的框架结构如下图所示，其中`core layer`根据MMC/SD设备协议标准实现了协议。`card layer`与Linux的块设备子系统对接，实现块设备驱动以及完成请求，具体协议经过`core layer`的接口，最终通过`host layer`完成传输，对MMC设备进行实际的操作。和MMC设备硬件相对应，`host`和`card`可以分别理解为MMC device的两个子设备：MMC主设备和MMC从设备，其中`host`为集成于MMC设备内部的MMC controller，`card`为MMC设备内部实际的存储设备。  
-![MMC Subsystem]({{ "/assets/img/sample/mmc_subsystem.svg"| relative_url }})
+![MMC Subsystem]({{ "/assets/img/sample/mmc_subsystem.svg"| relative_url }}){:height="300px" width="150px"}
 
 Linux系统中，使用两个结构体`struct mmc_host`和`struct mmc_card`分别描述`host`和`card`，其中`host`设备被封装成`platform_device`注册到Linux驱动模型中。整体而言，（Linux驱动模型框架下）MMC驱动子系统包括三个部分：  
 + MMC总线（`mmc_bus`）  
