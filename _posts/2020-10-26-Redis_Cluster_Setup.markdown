@@ -315,10 +315,10 @@ S: 32ed645a9c9d13ca68dba5a147937fb1d05922ee 127.0.0.1:6480
 >>> Send CLUSTER MEET to node 127.0.0.1:6382 to make it join the cluster.
 [OK] New node added correctly.
 ```
-(3) 重新分片：借助`redis-cli --cluster reshard`命令对集群重新分片，使得各节点槽位均衡。需要指定：  
-* 移动的槽位数  
-* 接收槽位的目标节点ID  
-* 移出槽位的源节点ID  
+(3) 重新分片：借助`redis-cli --cluster reshard`命令对集群重新分片，使得各节点槽位均衡（分别从节点6379/6380/6381中迁移一些slot到节点6382中）。需要指定：  
+* 移动的槽位数：最终平均每个主节点有4096个slot，因此总共移动4096 slots  
+* 接收槽位的目标节点ID：节点6382的ID  
+* 移出槽位的源节点ID：节点6379/6380/6381的ID  
 ```
 $ redis-cli --cluster reshard 127.0.0.1 6479
 >>> Performing Cluster Check (using node 127.0.0.1:6479)
@@ -450,5 +450,5 @@ Redis集群环境的搭建主要包括启动节点、节点握手、槽指派和
 
 ## 参考资料
 [1] Redis设计与实现，黄健宏著  
-[2] Redis cluster tutorial : [(https://redis.io/topics/cluster-tutorial)](https://redis.io/topics/cluster-tutorial)
-
+[2] Redis cluster tutorial : [(https://redis.io/topics/cluster-tutorial)](https://redis.io/topics/cluster-tutorial)  
+[3] 深入学习Redis（5）：集群 [(https://www.cnblogs.com/kismetv/p/9853040.html)](https://www.cnblogs.com/kismetv/p/9853040.html)
