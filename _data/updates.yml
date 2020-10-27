@@ -1,4 +1,10 @@
 -
+  filename: 'Linux_MMC_driver'
+  lastmod: '2020-10-27 14:19:46 +0800'
+-
+  filename: 'Linux_Wait_Queue'
+  lastmod: '2020-09-29 19:23:11 +0800'
+-
   filename: 'Linux_device_and_driver_model'
   lastmod: '2020-09-22 11:27:04 +0800'
 -
@@ -6,7 +12,7 @@
   lastmod: '2020-08-19 21:17:29 +0800'
 -
   filename: 'Memory_management_in_redis'
-  lastmod: '2020-07-21 21:29:35 +0800'
+  lastmod: '2020-10-27 14:19:46 +0800'
 -
   filename: 'DP_Greedy_Algorithm'
   lastmod: '2020-06-24 16:03:38 +0800'
