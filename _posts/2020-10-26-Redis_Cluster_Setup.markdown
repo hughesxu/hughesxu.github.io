@@ -235,7 +235,7 @@ vars currentEpoch 6 lastVoteEpoch 0
 集群伸缩的关键在于对集群的进行重新分片，实现槽位在节点间的迁移。本节将以在集群中添加节点和删除节点为例，对槽迁移进行实践。  
 借助于`redis-cli`中集成的`redis-trib.rb`工具进行槽位的管理，工具的帮助菜单如下：  
 ```
-$ ./redis-cli --cluster help
+$ redis-cli --cluster help
 Cluster Manager Commands:
   create         host1:port1 ... hostN:portN
                  --cluster-replicas <arg>
@@ -442,6 +442,11 @@ c47598b25205cc88abe2e5094d5bfd9ea202335f 127.0.0.1:6380@16380 master - 0 1603773
 9d587b75bdaed26ca582036ed706df8b2282b0aa 127.0.0.1:6481@16481 slave 51081a64ddb3ccf5432c435a8cf20d45ab795dd8 0 1603773677099 4 connected
 51081a64ddb3ccf5432c435a8cf20d45ab795dd8 127.0.0.1:6381@16381 master - 0 1603773678112 2 connected 11597-16383
 ```
+
+## 3 总结
+
+Redis集群环境的搭建主要包括启动节点、节点握手、槽指派和主从复制等四个步骤，集群伸缩同样涉及这几个方面。借助`redis-cli --cluster`命令来管理集群环境，不仅能增加简便性，还能降低操作失误的风险。  
+
 
 ## 参考资料
 [1] Redis设计与实现，黄健宏著  
