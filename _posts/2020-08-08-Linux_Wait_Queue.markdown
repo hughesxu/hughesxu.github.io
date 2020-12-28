@@ -64,7 +64,7 @@ typedef struct wait_queue_entry wait_queue_entry_t;
 用于`wake up`唤醒等待队列时实现分段遍历，减少单次对自旋锁的占用时间。  
 
 ### 2.2 等待队列的创建和初始化  
-等待队列头的定义和初始化有两种方式：`init_waitqueue_head(&wq_head)`和宏定义`DECLARE_WAITQUEUE(name, task)`。  
+等待队列头的定义和初始化有两种方式：`init_waitqueue_head(&wq_head)`和宏定义`DECLARE_WAIT_QUEUE_HEAD(name)`。  
 ```
 #define init_waitqueue_head(wq_head)                            \
     do {                                                        \
