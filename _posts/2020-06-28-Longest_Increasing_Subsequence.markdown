@@ -21,7 +21,7 @@ tags: [DP, Greedy]
 ### 动态规划
 &emsp;最长上升子序列问题，是满足最优子结构性质的（证明步骤作为遗留问题，可以清晰地看到，当分析到`X`中第`ii`个元素时，问题的求解是和其前面的元素`jj (0< jj < ii)`相关的）。考虑采用动态规划的方式进行求解，尝试刻画最优子结构特征来得到状态转移方程。  
 &emsp;定义状态`dp`：`dp[ii]表示 以序列X中第ii个元素结尾的LIS的长度`。  
-&emsp;初始状态时，以每个元素结尾，初始化LIS的长度为`1`，即`dp[ii] = 1 (0 <= ii <= NN)`。从头到尾遍历整个序列，到达序列的任意位置`ii (0 <= ii <= NN)`时，遍历该位置前的所有元素`jj (0 <= jj < ii)`。如果`seq[ii] < seq[jj]`，那么可以将`seq[jj]`接在以`seq[ii]`为结尾的LIS后面，形成一个新的LIS；否则，当前以当前位置结束的LIS不变。由此，可以得到状态转移方程：  
+&emsp;初始状态时，以每个元素结尾，初始化LIS的长度为`1`，即`dp[ii] = 1 (0 <= ii < NN)`。从头到尾遍历整个序列，到达序列的任意位置`ii (0 <= ii < NN)`时，遍历该位置前的所有元素`jj (0 <= jj < ii)`。如果`seq[ii] > seq[jj]`，那么可以将`seq[ii]`接在以`seq[jj]`为结尾的LIS后面，形成一个新的LIS；否则，当前以当前位置结束的LIS不变。由此，可以得到状态转移方程：  
 ```
     dp[ii] = dp[jj] + 1;          // if seq[jj] < seq[ii]
     dp[ii] = 1                    // if seq[jj] >= seq[ii]
@@ -41,8 +41,8 @@ int LIS_n_n(vector<int> &seq, int NN)
 {
     /*
      * dp[ii] is the sequence with seq[ii] as its last element
-     *  if seq[jj] <= seq[ii] (jj < ii):          dp[ii] = dp[jj] + 1;
-     *  else:                                     dp[jj] = 1
+     *  if seq[jj] < seq[ii] (jj < ii):           dp[ii] = dp[jj] + 1;
+     *  else:                                     dp[ii] = 1
      */
     vector<int> dp(NN, 1);
     int longest = 1;
@@ -60,18 +60,13 @@ int LIS_n_n(vector<int> &seq, int NN)
     for (int ii = 1; ii < NN; ii++) {
         for (int jj = 0; jj < ii; jj++) {
             if (seq[ii] > seq[jj]) {
-                if (dp[ii] < dp[jj] + 1) {
+                if (dp[ii] <= dp[jj] + 1) {
+                    if (dp[ii] < dp[jj] + 1)
+                        // Clear existing sequence in lis[ii], as longer one appear.
+                        lis[ii].clear();        
+
                     dp[ii] = dp[jj] + 1;
-                    
-                    // Clear existing sequence in lis[ii], as longer one appear.
-                    lis[ii].clear();        
-                    vector<vector<int> > local;
-                    local.assign(lis[jj].begin(), lis[jj].end());
-                    for (unsigned int kk = 0; kk < local.size(); kk++) {
-                        local[kk].push_back(seq[ii]);
-                        lis[ii].push_back(local[kk]);
-                    }
-                } else if (dp[ii] == dp[jj] + 1) {
+
                     vector<vector<int> > local;
                     local.assign(lis[jj].begin(), lis[jj].end());
                     for (unsigned int kk = 0; kk < local.size(); kk++) {
@@ -81,11 +76,10 @@ int LIS_n_n(vector<int> &seq, int NN)
                 }
             }
         }
-        if (longest < dp[ii]) {
+        if (longest <= dp[ii]) {
+            if (longest < dp[ii])
+                index.clear();
             longest = dp[ii];
-            index.clear();
-            index.push_back(ii);
-        } else if (longest == dp[ii]){
             index.push_back(ii);
         }
     }
@@ -106,7 +100,7 @@ int LIS_n_n(vector<int> &seq, int NN)
     return longest;
 }
 ```
-&emsp;对于**最长不下降子序列**问题，只需要第`25`行的`if (seq[ii] > seq[jj])`判断改为`if (seq[ii] >= seq[jj])`即可。  
+&emsp;对于**最长不下降子序列**问题，只需要第`24`行的`if (seq[ii] > seq[jj])`判断改为`if (seq[ii] >= seq[jj])`即可。  
 
 
 
