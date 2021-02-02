@@ -430,5 +430,5 @@ static int compat_core_sys_select(int n, compat_ulong_t __user *inp,
 ## 参考资料
 [1] select/poll/epoll对比分析：[(http://gityuan.com/2015/12/06/linux_epoll/)](http://gityuan.com/2015/12/06/linux_epoll/)   
 [2] 源码解读poll/select内核机制：[(http://gityuan.com/2019/01/05/linux-poll-select/)](http://gityuan.com/2019/01/05/linux-poll-select/)  
-[3] 一文看懂IO多路复用：[(https://zhuanlan.zhihu.com/p/115220699)](https://zhuanlan.zhihu.com/p/115220699)
+[3] 一文看懂IO多路复用：[(https://zhuanlan.zhihu.com/p/115220699)](https://zhuanlan.zhihu.com/p/115220699)  
 [4] POLL机制：[(https://www.cnblogs.com/liuqing520/p/12706187.html)](https://www.cnblogs.com/liuqing520/p/12706187.html)
