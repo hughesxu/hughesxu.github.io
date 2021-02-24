@@ -125,7 +125,7 @@ out_fds:
 }
 ```
 `do_sys_poll`函数首先将`pollfd`结构体数组从用户空间拷贝至内核空间，同时用名为`poll_list`的链表存储（一部分存储在栈空间上，一部分存储在堆空间），形如：  
-![poll_list]({{ "/assets/img/sample/poll_list.svg"| relative_url }}){:height="320px" width="600px"}
+![poll_list]({{ "/assets/img/sample/poll_list.svg"| relative_url }}){:height="320px" width="600px"}  
 `poll_initwait(&table)`对`poll_wqueues`结构体变量`table`进行初始化：  
 ```
 struct poll_wqueues table = {
