@@ -22,13 +22,13 @@ The correct way to log is to use the option, "--log-file=filename"
 
 Memcheck is the memory error detector tool in Valgrind, to use it, you "may" specify the option "--tool=memcheck", but you don't need to since Memcheck is the default tool of Valgrind.  
 
-https://prajankya.me/valgrind-on-linux/  
-http://senlinzhan.github.io/2017/12/31/valgrind/  
-valgrind 官方网站：https://valgrind.org/docs/manual/index.html  
+[https://prajankya.me/valgrind-on-linux/](https://prajankya.me/valgrind-on-linux/)  
+[http://senlinzhan.github.io/2017/12/31/valgrind/](http://senlinzhan.github.io/2017/12/31/valgrind/)  
+valgrind 官方网站：[https://valgrind.org/docs/manual/index.html](https://valgrind.org/docs/manual/index.html)  
 
 
 
-https://valgrind.org/docs/manual/faq.html  
+是否能用Valgrind调试运行时进程？[https://valgrind.org/docs/manual/faq.html](https://valgrind.org/docs/manual/faq.html)  
 ```
 Is it possible to attach Valgrind to a program that is already running?
 No. The environment that Valgrind provides for running programs is 
@@ -49,7 +49,7 @@ of interest. Support for this must be provided by the tool,
 
 ## 2 进程运行时内存检查
 
-https://unix.stackexchange.com/questions/36450/how-can-i-find-a-memory-leak-of-a-running-process
+[https://unix.stackexchange.com/questions/36450/how-can-i-find-a-memory-leak-of-a-running-process](https://unix.stackexchange.com/questions/36450/how-can-i-find-a-memory-leak-of-a-running-process)
 
 - Find out the PID of the process which causing memory leak.
 
@@ -79,7 +79,7 @@ strings outputfile.dump
 
 ### RES内存
 
-https://stackoverflow.com/questions/23077525/resident-memory-increase-while-valgrind-not-showing-any-leaks
+[https://stackoverflow.com/questions/23077525/resident-memory-increase-while-valgrind-not-showing-any-leaks](https://stackoverflow.com/questions/23077525/resident-memory-increase-while-valgrind-not-showing-any-leaks)
 ```
 The heap is part of your "res" memory, so if you have something
 that allocates x MB of heap memory, then releases it, unless
@@ -92,5 +92,5 @@ but for this discussion, this picture is valid).
 
 ## 3 进程内核调用检查strace
 
-https://wangchujiang.com/linux-command/c/strace.html
+[https://wangchujiang.com/linux-command/c/strace.html](https://wangchujiang.com/linux-command/c/strace.html)
 
