@@ -588,22 +588,22 @@ fi
 语句形式：  
 ```
 case $变量名称 in		     #关键词为case
-“第一个变量内容”）			  #每个变量内容建议用双引号括起来，关键字为）
+“第一个变量内容”）	      #每个变量内容建议用双引号括起来，关键字为）
 程序段
-;;							#每个类型结尾使用两个连续的分号处理
+;;				    #每个类型结尾使用两个连续的分号处理
 “第二个变量内容”）
 程序段
 ;;
-*）							#最后一个变量内容都会有 * 来代表所有值
+*）				      #最后一个变量内容都会有 * 来代表所有值
 程序段
 ;;
-esac 						#case反过来写，表示结尾
+esac 					#case反过来写，表示结尾
 ```
 
 #### 2.11.3 利用 function 功能
 语句形式：
 ```
-function fname ( ) {				#fname为自定义的执行命令名称
+function fname ( ) {		#fname为自定义的执行命令名称
 程序段
 }
 ```
@@ -621,7 +621,7 @@ function fname ( ) {				#fname为自定义的执行命令名称
 语句形式：
 ```
 while [ condition ]				#中括号内为判断式
-do								#done内为循环的开始
+do							#done内为循环的开始
 程序段落
 done							#done内为循环的结束
 ```
@@ -631,7 +631,7 @@ done							#done内为循环的结束
 语句形式：
 ```
 until [ condition ]				#中括号内为判断式
-do								#done内为循环的开始
+do							#done内为循环的开始
 程序段落
 done							#done内为循环的结束
 ```
@@ -691,8 +691,8 @@ eg :
 绿色 (Green)		|32			|42
 黄色 (Yellow)		|33			|43
 蓝色 (Blue)			|34			|44
-紫红色 (Magenta)	|35			|45
-青色 (Cyan)		    |36			|46
+紫红色 (Magenta)	      |35			|45
+青色 (Cyan)		      |36			|46
 白色 (White)		|37			|47
 
 ANSI 码|含义
@@ -806,12 +806,22 @@ if [[ $tmp =~ $regex ]]; then
 
 
 ### 3.6 log输入与屏幕输出
+
+[https://unix.stackexchange.com/questions/145651/using-exec-and-tee-to-redirect-logs-to-stdout-and-a-log-file-in-the-same-time](https://unix.stackexchange.com/questions/145651/using-exec-and-tee-to-redirect-logs-to-stdout-and-a-log-file-in-the-same-time)
+
 ```
-https://unix.stackexchange.com/questions/145651/using-exec-and-tee-to-redirect-logs-to-stdout-and-a-log-file-in-the-same-time
-Use process substitution with & redirection and exec:
+Use process substitution with & redirection and exec: 
+
 exec &> >(tee -a "$log_file")
-echo This will be logged to the file and to the screen
-$log_file will contain the output of the script and any subprocesses, and the output will also be printed to the screen.
->(...) starts the process ... and returns a file representing its standard input. exec &> ...redirects both standard output and standard error into ... for the remainder of the script (use just exec > ... for stdout only). tee -a appends its standard input to the file, and also prints it to the screen.
+echo This will be logged to the file and to the screen 
+
+$log_file will contain the output of the script and any subprocesses, 
+and the output will also be printed to the screen.
+
+>(...) starts the process ... and returns a file representing its 
+standard input. exec &> ...redirects both standard output and standard 
+error into ... for the remainder of the script (use just exec > ... 
+for stdout only). tee -a appends its standard input to the file, and 
+also prints it to the screen.
 ```
 

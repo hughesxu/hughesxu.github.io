@@ -15,5 +15,5 @@ https://hughesxu.github.io/
 
 ## 代码提交过程
 ### 1）git commit
-### 2）sh ./tools/init.sh
+### 2）./tools/init.sh
 更新LastMod信息

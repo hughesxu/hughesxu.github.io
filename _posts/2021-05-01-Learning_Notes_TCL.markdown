@@ -335,14 +335,14 @@ pattern被当作一个正则表达式来匹配列表中的每一个元素，与r
     - `-real`  
 列表中的元素被当作浮点数来处理。
 
-- **列表排序可选项**
+- **列表排序可选项**  
 这个可选项指定了列表如何排序，只有指定了`-sorted`时才有效。如果给出了多个可选项，那么最后给出的可选项有效。
-    - `-decreasing`
+    - `-decreasing`  
 列表元素为降序排列，只有指定了-sorted时才有效。
-    - `-increasing`
+    - `-increasing`  
 列表元素为升序排列，只有指定了-sorted时才有效。
 
-- **内嵌列表可选项**
+- **内嵌列表可选项**  
 这些可选项被用来寻找子列表，可以与任何其它可选项一起使用。
     - `-index indexList`  
 这个可选项寻找内嵌的列表，indexList变元必须给出一个索引列表（与lindex和lset类似），indexList给出的索引列表在list中必须存在对应的索引，否则会出错。
@@ -946,7 +946,7 @@ set card_type $::env(INS_CARD_TYPE)
 5	|`info procs?pattern?`	|返回过程列表
 6	|`info vars?pattern?`	|返回变量列表
 
->>http://blog.sina.com.cn/s/blog_4b3c1f950102dz9s.html
+>>[http://blog.sina.com.cn/s/blog_4b3c1f950102dz9s.html](http://blog.sina.com.cn/s/blog_4b3c1f950102dz9s.html)
 
 ```
 [file dirname [info script]
@@ -971,37 +971,91 @@ SYNOPSIS
 tclsh ?-encoding name? ?fileName arg arg ...?
 
 DESCRIPTION
-Tclsh is a shell-like application that reads Tcl commands from its standard input or from a file and evaluates them. If invoked with no arguments then it runs interactively, reading Tcl commands from standard input and printing command results and error messages to standard output. It runs until the exit command is invoked or until it reaches end-of-file on its standard input. If there exists a file .tclshrc (or tclshrc.tcl on the Windows platforms) in the home directory of the user, interactive tclsh evaluates the file as a Tcl script just before reading the first command from standard input.
+Tclsh is a shell-like application that reads Tcl commands from its
+standard input or from a file and evaluates them. If invoked with no
+arguments then it runs interactively, reading Tcl commands from 
+standard input and printing command results and error messages to 
+standard output. It runs until the exit command is invoked or until it 
+reaches end-of-file on its standard input. If there exists a file .
+tclshrc (or tclshrc.tcl on the Windows platforms) in the home directory
+of the user, interactive tclsh evaluates the file as a Tcl script just 
+before reading the first command from standard input.
+
 SCRIPT FILES
-If tclsh is invoked with arguments then the first few arguments specify the name of a script file, and, optionally, the encoding of the text data stored in that script file. Any additional arguments are made available to the script as variables (see below). Instead of reading commands from standard input tclsh will read Tcl commands from the named file; tclsh will exit when it reaches the end of the file. The end of the file may be marked either by the physical end of the medium, or by the character, “\032” (“\u001a”, control-Z). If this character is present in the file, the tclsh application will read text up to but not including the character. An application that requires this character in the file may safely encode it as “\032”, “\x1a”, or “\u001a”; or may generate it by use of commands such as format or binary. There is no automatic evaluation of .tclshrc when the name of a script file is presented on the tclsh command line, but the script file can always source it if desired.
+If tclsh is invoked with arguments then the first few arguments specify
+the name of a script file, and, optionally, the encoding of the text 
+data stored in that script file. Any additional arguments are made 
+available to the script as variables (see below). Instead of reading 
+commands from standard input tclsh will read Tcl commands from the 
+named file; tclsh will exit when it reaches the end of the file. The 
+end of the file may be marked either by the physical end of the medium, 
+or by the character, “\032” (“\u001a”, control-Z). If this character is 
+present in the file, the tclsh application will read text up to but not 
+including the character. An application that requires this character in 
+the file may safely encode it as “\032”, “\x1a”, or “\u001a”; or may 
+generate it by use of commands such as format or binary. There is no 
+automatic evaluation of .tclshrc when the name of a script file is 
+presented on the tclsh command line, but the script file can always source 
+it if desired.
+
 If you create a Tcl script in a file whose first line is
 
 #!/usr/local/bin/tclsh
 
-then you can invoke the script file directly from your shell if you mark the file as executable. This assumes that tclsh has been installed in the default location in /usr/local/bin; if it is installed somewhere else then you will have to modify the above line to match. Many UNIX systems do not allow the #! line to exceed about 30 characters in length, so be sure that the tclsh executable can be accessed with a short file name.
-An even better approach is to start your script files with the following three lines:
+then you can invoke the script file directly from your shell if you mark 
+the file as executable. This assumes that tclsh has been installed in the 
+default location in /usr/local/bin; if it is installed somewhere else then 
+you will have to modify the above line to match. Many UNIX systems do not 
+allow the #! line to exceed about 30 characters in length, so be sure that 
+the tclsh executable can be accessed with a short file name.
+
+An even better approach is to start your script files with the following 
+three lines: 
 
 #!/bin/sh
 # the next line restarts using tclsh \
 exec tclsh "$0" ${1+"$@"}
 
-This approach has three advantages over the approach in the previous paragraph. 
-•	First, the location of the tclsh binary does not have to be hard-wired into the script: it can be anywhere in your shell search path. 
-•	Second, it gets around the 30-character file name limit in the previous approach. 
-•	Third, this approach will work even if tclsh is itself a shell script (this is done on some systems in order to handle multiple architectures or operating systems: the tclsh script selects one of several binaries to run). 
-The three lines cause both sh and tclsh to process the script, but the exec is only executed by sh. sh processes the script first; it treats the second line as a comment and executes the third line. The exec statement cause the shell to stop processing and instead to start up tclsh to reprocess the entire script. When tclsh starts up, it treats all three lines as comments, since the backslash at the end of the second line causes the third line to be treated as part of the comment on the second line.
-You should note that it is also common practice to install tclsh with its version number as part of the name. This has the advantage of allowing multiple versions of Tcl to exist on the same system at once, but also the disadvantage of making it harder to write scripts that start up uniformly across different versions of Tcl.
+This approach has three advantages over the approach in the previous 
+paragraph. 
+•	First, the location of the tclsh binary does not have to be hard-wired 
+into the script: it can be anywhere in your shell search path. 
+
+•	Second, it gets around the 30-character file name limit in the 
+previous approach. 
+
+•	Third, this approach will work even if tclsh is itself a shell script 
+(this is done on some systems in order to handle multiple architectures or 
+operating systems: the tclsh script selects one of several binaries to 
+run). 
+The three lines cause both sh and tclsh to process the script, but the 
+exec is only executed by sh. sh processes the script first; it treats the 
+second line as a comment and executes the third line. The exec statement 
+cause the shell to stop processing and instead to start up tclsh to 
+reprocess the entire script. When tclsh starts up, it treats all three 
+lines as comments, since the backslash at the end of the second line 
+causes the third line to be treated as part of the comment on the second 
+line.
+You should note that it is also common practice to install tclsh with its 
+version number as part of the name. This has the advantage of allowing 
+multiple versions of Tcl to exist on the same system at once, but also the 
+disadvantage of making it harder to write scripts that start up uniformly 
+across different versions of Tcl.
 
 VARIABLES
 Tclsh sets the following Tcl variables:
 argc
-Contains a count of the number of arg arguments (0 if none), not including the name of the script file.
+Contains a count of the number of arg arguments (0 if none), not including 
+the name of the script file.
 argv
-Contains a Tcl list whose elements are the arg arguments, in order, or an empty string if there are no arg arguments.
+Contains a Tcl list whose elements are the arg arguments, in order, or an 
+empty string if there are no arg arguments.
 argv0
-Contains fileName if it was specified. Otherwise, contains the name by which tclsh was invoked.
+Contains fileName if it was specified. Otherwise, contains the name by 
+which tclsh was invoked.
 tcl_interactive
-Contains 1 if tclsh is running interactively (no fileName was specified and standard input is a terminal-like device), 0 otherwise.
+Contains 1 if tclsh is running interactively (no fileName was specified 
+and standard input is a terminal-like device), 0 otherwise.
 ```
 
 
@@ -1028,18 +1082,40 @@ Contains 1 if tclsh is running interactively (no fileName was specified and stan
 
 
 ```
-That's for compatibility with the Bourne shell. The Bourne shell was an old shell that was first released with Unix version 7 in 1979 and was still common until the mid 90s as /bin/sh on most commercial Unices.
-It is the ancestor of most Bourne-like shells like ksh, bash or zsh.
-It had a few awkward features many of which have been fixed in ksh and the other shells and the new standard specification of sh, one of which is this:
+That's for compatibility with the Bourne shell. The Bourne shell was an 
+old shell that was first released with Unix version 7 in 1979 and was 
+still common until the mid 90s as /bin/sh on most commercial Unices. 
 
-With the Bourne shell (at least those variants where it has not been fixed): "$@" expands to one empty argument if the list of positional parameters is empty ($# == 0) instead of no argument at all.
+It is the ancestor of most Bourne-like shells like ksh, bash or zsh. 
 
-${var+something} expands to "something" unless $var is unset. It is clearly documented in all shells but hard to find in the bash documentation as you need to pay attention to this sentence:
-When not performing substring expansion, using the forms documented below, bash tests for a parameter that is unset or null. Omitting the colon results in a test only for a parameter that is unset.
+It had a few awkward features many of which have been fixed in ksh and the 
+other shells and the new standard specification of sh, one of which is 
+this:
 
-So ${1+"$@"} expands to "$@" only if $1 is set ($# > 0) which works around that limitation of the Bourne shell.
+With the Bourne shell (at least those variants where it has not been fixed: 
+"$@" expands to one empty argument if the list of positional parameters is 
+empty ($# == 0) instead of no argument at all.
 
-Note that the Bourne shell is the only shell with that problem. Modern shs (that is sh conforming to the POSIX specification of sh (which the Bourne shell is not)) don't have that issue. So you only need that if you need your code to work on very old systems where /bin/sh might be a Bourne shell instead of a standard shell (note that POSIX doesn't specify the location of the standard sh, so for instance on Solaris before Solaris 11, /bin/sh was still a Bourne shell (though did not have that particular issue) while the normal/standard sh was in another location (/usr/xpg4/bin/sh)).
+${var+something} expands to "something" unless $var is unset. It is 
+clearly documented in all shells but hard to find in the bash 
+documentation as you need to pay attention to this sentence:
+
+When not performing substring expansion, using the forms documented below, 
+bash tests for a parameter that is unset or null. Omitting the colon 
+results in a test only for a parameter that is unset.
+
+
+So ${1+"$@"} expands to "$@" only if $1 is set ($# > 0) which works around 
+that limitation of the Bourne shell.
+
+Note that the Bourne shell is the only shell with that problem. Modern shs 
+(that is sh conforming to the POSIX specification of sh (which the Bourne 
+shell is not)) don't have that issue. So you only need that if you need 
+your code to work on very old systems where /bin/sh might be a Bourne 
+shell instead of a standard shell (note that POSIX doesn't specify the 
+location of the standard sh, so for instance on Solaris before Solaris 
+11, /bin/sh was still a Bourne shell (though did not have that particular 
+issue) while the normal/standard sh was in another location (/usr/xpg4/bin/sh)).
 ```
 
 
@@ -1048,14 +1124,29 @@ Note that the Bourne shell is the only shell with that problem. Modern shs (that
 ::tclreadline::Loop [historyfile ]
 ```
 ```
-enter the tclreadline main loop. This command is typically called from the startup resource file (something .tclshrc, depending on the interpreter you use, see the file `sample.tclshrc'). The main loop sets up some completion characteristics as variable -- try something like "puts $b<TAB>" -- and command completion -- try "puts [in<TAB>". If the optional argument historyfile is given, this file will be used for reading and writing the command history instead of the default .tclsh-history . ::tclreadline::Loop will normally not return. If you want to write your own main loop and/or own custom completers, it is probably a good idea to start with tclreadline::Loop (see the file tclreadlineSetup.tcl).
+enter the tclreadline main loop. This command is typically called from the 
+startup resource file (something .tclshrc, depending on the interpreter 
+you use, see the file `sample.tclshrc'). The main loop sets up some 
+completion characteristics as variable -- try something like "puts 
+$b<TAB>" -- and command completion -- try "puts [in<TAB>". If the optional 
+argument historyfile is given, this file will be used for reading and 
+writing the command history instead of the default .tclsh-history . 
+::tclreadline::Loop will normally not return. If you want to write your 
+own main loop and/or own custom completers, it is probably a good idea to 
+start with tclreadline::Loop (see the file tclreadlineSetup.tcl).
 ```
 
 ```
 ::tclreadline::prompt1
 ```
 ```
-a proc which is called by ::tclreadline::Loop and returns a string which will be displayed as the primary prompt. This prompt will be something like "[info nameofexecutable] [[pwd]]" possibly fancy colored. The default proc is defined on entering the ::tclreadline::Loop, if it is not already defined. So: If you define your own proc ::tclreadline::prompt1 before entering ::tclreadline::Loop, this proc is called each time the prompt is to be displayed. Example:
+a proc which is called by ::tclreadline::Loop and returns a string which 
+will be displayed as the primary prompt. This prompt will be something 
+like "[info nameofexecutable] [[pwd]]" possibly fancy colored. The default 
+proc is defined on entering the ::tclreadline::Loop, if it is not already 
+defined. So: If you define your own proc ::tclreadline::prompt1 before 
+entering ::tclreadline::Loop, this proc is called each time the prompt is 
+to be displayed. Example:
 ```
 ```
      package require tclreadline 

@@ -129,16 +129,33 @@ log_file expectout.txt
 #### 1.2.10 sleep and after
 
 There are three different entities:
+
 The Tclx's sleep
-The sleep command from the Tclx package. According to the documentation, it takes a decimal argument, taken to be the number of seconds to sleep. However, the fraction part is truncated. That means sleep 2.5 will sleep for two seconds.
+
+The sleep command from the Tclx package. According to the documentation, it takes a decimal 
+argument, taken to be the number of seconds to sleep. However, the fraction part is truncated. 
+That means sleep 2.5 will sleep for two seconds. 
+
 The Expect's sleep
-The sleep command from the Expect package. This is similar to its counterpart from the Tclxpackage. However, sleep 2.5 means sleeping for 2.5 seconds, there is no truncation.
+The sleep command from the Expect package. This is similar to its counterpart from the 
+Tclxpackage. However, sleep 2.5 means sleeping for 2.5 seconds, there is no truncation.
+
 After
-Finally, the built-in after, which is a totally different beast. The after command takes its first input as the number of milliseconds to sleep off. This is the "synchronous" mode Jerry refers to. After also takes a second argument. In this case, after returns a token right away. After the specified time, the script will be executed. With the token, you can cancel the script.
+
+Finally, the built-in after, which is a totally different beast. The after command takes its 
+first input as the number of milliseconds to sleep off. This is the "synchronous" mode Jerry 
+refers to. After also takes a second argument. In this case, after returns a token right away. 
+After the specified time, the script will be executed. With the token, you can cancel the script.
+
 I hope this helps.
+
 My try at a short explanation:
+
 The Tcl sleep will like the TclX sleep just pause the script.
-The after command can pause the script, but it is normally used for event based programming. It can execute a script after the elapsed time (if the event loop is running).
+
+The after command can pause the script, but it is normally used for event based programming. It 
+can execute a script after the elapsed time (if the event loop is running).
+
 More on this see here at beedub.com.
 
 
@@ -153,8 +170,11 @@ More on this see here at beedub.com.
 
 (1)	`expect eof`和`interact`都能检测到当前程序的退出，并隐含地执行一个close;   
 ```
-close does not call wait since there is no guarantee that closing a process connection will cause it to exit.
-Fortunately, in many scripts it is not necessary to explicitly close the connection because it can occur implicitly. There are two situations when you do not have to use close: 
+close does not call wait since there is no guarantee that closing a process connection will 
+cause it to exit.
+Fortunately, in many scripts it is not necessary to explicitly close the connection because 
+it can occur implicitly. There are two situations when you do not have to use close: 
+
 • when the Expect process ends, or 
 • when the expect command reads an eof from the spawned process.
 ```
@@ -163,16 +183,23 @@ After closing the connection, a spawned process can finish up and exit.
 
 (2)	`Wait`用来清理子进程， 
 ```
-The -nowait flag causes the wait to return immediately with the indication of a successful wait. When the process exits (later), it will automatically disappear without the need for an explicit wait.
-Because a process will not disappear from the system until you give the wait command, it is common to speak of waiting for or waiting on a process. Some people also like to use the term reap as in "reaping a process".
+The -nowait flag causes the wait to return immediately with the indication of a successful wait.
+ When the process exits (later), it will automatically disappear without the need for an explicit 
+ wait.
+Because a process will not disappear from the system until you give the wait command, it is 
+common to speak of waiting for or waiting on a process. Some people also like to use the term 
+reap as in "reaping a process".
 
-Unlike close, however, wait implicitly happens in only one case-when an Expect process (i.e., script) exits. On exit, all the spawned processes are waited for.
-This means that Expect scripts that only spawn a single process and then exit, need not call wai t since it will be done automatically
+Unlike close, however, wait implicitly happens in only one case-when an Expect process (i.e., 
+script) exits. On exit, all the spawned processes are waited for.
+This means that Expect scripts that only spawn a single process and then exit, need not call 
+wait since it will be done automatically
 ```
 只有一个子进程的程序不需要显式调用`close/wait`，Expect主进程结束时会隐式调用`close`和`wait`.
 ```
 wai t returns a list describing a process that was waited upon. 
-The list contains the process id, spawn id, and a 0 or -1. A 0 indicates that the process was waited upon successfully. In this case, the next value is the status.
+The list contains the process id, spawn id, and a 0 or -1. A 0 indicates that the process was 
+waited upon successfully. In this case, the next value is the status.
 ```
 
 (3)	Kill  
@@ -213,15 +240,20 @@ puts "\n"
 
 ### 1.3 命令行参数
 The script name is not included in the argument list. 
-The arguments are only those of the script, not of Expect. This is convenient in many scripts because the argument list can be directly used without stripping out the command name.   
-The script name is stored in the variable `argv0`. Adding the command "puts "argv0 : $argv0 "" as the first line of the example script causes it to print an additionalline:
+The arguments are only those of the script, not of Expect. This is convenient in many scripts 
+because the argument list can be directly used without stripping out the command name.   
+
+The script name is stored in the variable `argv0`. Adding the command "puts "argv0 : $argv0 "" 
+as the first line of the example script causes it to print an additionalline:
 ``` 
 argvO: eeho.exp 
 arg 0: faa 
 arg 1: bar 
 arg 2: 17 and a half
 ```
-Very old systems do not follow the `#!` convention at all, and instead use `/bin/` sh to execute all scripts. Inserting the following lines at the beginning of your script allows it to be portable between such systems and modern ones that do invoke the correct `interpreter.t` 
+Very old systems do not follow the `#!` convention at all, and instead use `/bin/` sh to 
+execute all scripts. Inserting the following lines at the beginning of your script allows it 
+to be portable between such systems and modern ones that do invoke the correct `interpreter.t` 
 ```
 #!/bin/sh 
 set kludge { ${1+"$@"} 
@@ -248,15 +280,20 @@ Flags|Description
 `--`		|do not interpret remaining arguments, The `--` is a flag to Expect. It says not to interpret any of the script arguments but just to pass them on to the script.
 
 The `-f` flag prefaces a file from which to read commands from.   
-The flag itself is optional as it is only useful when using the `#!` notation (see above), so that other arguments may be supplied on the command line.  
+The flag itself is optional as it is only useful when using the `#!` notation (see above), 
+so that other arguments may be supplied on the command line.  
 在脚本第一行解释器处加上这个参数，可以使得所有的`-c`选项能够被识别为参数。  
-Just as with `--`, when a script starts out with this -f line and is invoked just by its name (without "expect"), it behaves as you had entered the following command: 
+Just as with `--`, when a script starts out with this -f line and is invoked just by its name 
+(without "expect"), it behaves as you had entered the following command: 
 ```
 % expect -f script args   
 ```
-Now you can use Expect flags such as `-c` and they will be correctly handled. Since the `-f script` looks like a flag, Expect continues looking and finds the `-c` and interprets this as a flag, too.
+Now you can use Expect flags such as `-c` and they will be correctly handled. Since the `-f 
+script` looks like a flag, Expect continues looking and finds the `-c` and interprets this as a 
+flag, too.
 
-If you give the `-c` before the script name, it will not be included in the argv variable when the script ultimately gets control.
+If you give the `-c` before the script name, it will not be included in the argv variable when 
+the script ultimately gets control.
 
 ### 1.5 debug
 

@@ -25,7 +25,9 @@ Tips :
 - makefile变量引用：`“$(xx)”`或者`“${xx}”`
 - Makefile 用到环境变量时，不能直接使用`$ORACLE_HOME`，而是要使用`$(ORACLE_HOME)`
 ```
-In the VPATH variable, directory names are separated by colons or blanks. The order in which directories are listed is the order followed by make in its search.
+In the VPATH variable, directory names are separated by colons or 
+blanks. The order in which directories are listed is the order 
+followed by make in its search.
 ```
 ```
 TOP_DIR=$(shell TOP_DIR=Unable_To_Find_Top_Dir;CUR_DIR=$$(pwd);
@@ -46,9 +48,15 @@ Makefile中调用shell 命令，在shell命令中调用变量时，需要使用 
 
 ## Default goal
 ```
-The order of rules is not significant, except for determining the default goal: the target for make to consider, if you do not otherwise specify one. The default goal is the target of the first rule in the first makefile.
-If the first rule has multiple targets, only the first target is taken as the default. 
-There are two exceptions: a target starting with a period is not a default unless it contains one or more slashes, ‘/’, as well; and, a target that defines a pattern rule has no effect on the default goal.
+The order of rules is not significant, except for determining the 
+default goal: the target for make to consider, if you do not otherwise 
+specify one. The default goal is the target of the first rule in the 
+first makefile.
+If the first rule has multiple targets, only the first target is taken 
+as the default. 
+There are two exceptions: a target starting with a period is not a 
+default unless it contains one or more slashes, ‘/’, as well; and, a 
+target that defines a pattern rule has no effect on the default goal.
 ```
 
 ## Variable definitions
@@ -94,42 +102,63 @@ For the append operator, ‘+=’, the right-hand side is considered immediate i
 ## Two Flavors of Variables
 ```
 •	recursively expanded variables, also known as “deferred” way.  
-The value you specify is installed verbatim; if it contains references to other variables, these references are expanded whenever this variable is substituted.
+
+The value you specify is installed verbatim; if it contains references 
+to other variables, these references are expanded whenever this 
+variable is substituted.
 such as ‘=’, 
 
 •	simply expanded variables.  
-The value of a simply expanded variable is scanned once and for all, expanding any references to other variables and functions, when the variable is defined. The actual value of the simply expanded variable is the result of expanding the text that you write. It does not contain any references to other variables; it contains their values as of the time this variable was defined.
+The value of a simply expanded variable is scanned once and for all, 
+expanding any references to other variables and functions, when the 
+variable is defined. The actual value of the simply expanded variable 
+is the result of expanding the text that you write. It does not 
+contain any references to other variables; it contains their values as 
+of the time this variable was defined.
 such as ‘: =’, ‘:: =’ 
 
 •	=   :  recursively expanded  
 •	:=/::=   :  simply expanded  
 
 •	?=   : variable to be set to a value only if it’s not already set, 
-•	!=    : assignment operator ‘!=’ can be used to execute a shell script and set a variable to its output.
-The resulting string is then placed into the named recursively-expanded variable
+•	!=    : assignment operator ‘!=’ can be used to execute a shell 
+script and set a variable to its output.
+The resulting string is then placed into the named 
+recursively-expanded variable
 
-•	+=     : add more text to the value of a variable already defined
-When the variable in question has not been defined before, ‘+=’ acts just like normal ‘=’: it defines a recursively-expanded variable. 
-However, when there is a previous definition, exactly what ‘+=’ does depends on what flavor of variable you defined originally.
+•	+=     : add more text to the value of a variable already defined 
+When the variable in question has not been defined before, ‘+=’ acts 
+just like normal ‘=’: it defines a recursively-expanded variable. 
 
-the pattern rule has a pattern of just ‘%’, so it matches any target
-$$@ and $$% evaluate, respectively, to the file name of the target and, when the target is an archive member, the target member name.
-The $$< variable evaluates to the first prerequisite in the first rule for this target. 
-$$^ and $$+ evaluate to the list of all prerequisites of rules that have already appeared for the same
-target ($$+ with repetitions and $$^ without)
+However, when there is a previous definition, exactly what ‘+=’ does 
+depends on what flavor of variable you defined originally.
+
+the pattern rule has a pattern of just ‘%’, so it matches any target 
+$$@ and $$% evaluate, respectively, to the file name of the target 
+and, when the target is an archive member, the target member name. 
+
+The $$< variable evaluates to the first prerequisite in the first rule 
+for this target. 
+$$^ and $$+ evaluate to the list of all prerequisites of rules that 
+have already appeared for the sametarget ($$+ with repetitions and $$^ 
+without)
 for static pattern rules the $$* variable is set to the pattern stem. 
-As with explicit rules, $$? is not available and expands to the empty string.
+
+As with explicit rules, $$? is not available and expands to the empty 
+string.
 ```
 
 ## 通配符
 - `‘*’, ‘?’ and ‘[...]’`：  
 Wildcard expansion is performed by make automatically in targets and in prerequisites.
 In recipes, the shell is responsible for wildcard expansion. 
-In other contexts, wildcard expansion happens only if you request it explicitly with the wildcard function.
+In other contexts, wildcard expansion happens only if you request it explicitly with the 
+wildcard function.
 
 Wildcard expansion does not happen when you define a variable.
 
-One use of the wildcard function is to get a list of all the C source files in a directory, like this:
+One use of the wildcard function is to get a list of all the C source files in a directory, 
+like this:
 `$(wildcard *.c)`  
 We can change the list of C source files into a list of object files by replacing the `‘.c’` suffix with `‘.o’` in the result, like this:
 `$(patsubst %.c,%.o,$(wildcard *.c))`  
@@ -137,7 +166,8 @@ We can change the list of C source files into a list of object files by replacin
 
 
 ## `PHONY`
-A phony target is one that is not really the name of a file; rather it is just a name for a recipe to be executed when you make an explicit request.
+A phony target is one that is not really the name of a file; rather it is just a name for a 
+recipe to be executed when you make an explicit request.
 two reasons to use a phony target: 
 to avoid a conflict with a file of the same name, and to improve performance
 
@@ -146,7 +176,9 @@ to avoid a conflict with a file of the same name, and to improve performance
 clean:  
 rm *.o temp  
 ```
-In this example, the clean target will not work properly if a file named clean is ever created in this directory. Since it has no prerequisites, clean would always be considered up to date and its recipe would not be executed
+In this example, the clean target will not work properly if a file named clean is ever 
+created in this directory. Since it has no prerequisites, clean would always be considered 
+up to date and its recipe would not be executed
 
 
 `$(MAKE) -C $(KERNEL_SRC) M=$(PWD) modules`  
@@ -210,13 +242,20 @@ $*	|The names of all the order-only prerequisites, with spaces between them.
 - `.lo`: `libtool`生成的文件，被`libtool`用来生成共享库的
 
 ```
-The ‘.lo’ file is a library object, which may be built into a shared library, and the ‘.o’ file is a standard object file 
-The .lo file is the libtool object, which Libtool uses to determine what object file may be built into a shared library
+The ‘.lo’ file is a library object, which may be built into a shared library, and the ‘.o’ 
+file is a standard object file 
+The .lo file is the libtool object, which Libtool uses to determine what object file may be 
+built into a shared library
 ```
 
 ```
-Shared libraries, however, may only be built from position-independent code (PIC). So, special flags must be passed to the compiler to tell it to generate PIC rather than the standard position-dependent code.   
-Since this is a library implementation detail, libtool hides the complexity of PIC compiler flags by using separate library object files (which end in ‘.lo’ instead of ‘.o’). On systems without shared libraries (or without special PIC compiler flags), these library object files are identical to “standard” object files.
+Shared libraries, however, may only be built from position-independent code (PIC). So, 
+special flags must be passed to the compiler to tell it to generate PIC rather than the 
+standard position-dependent code.   
+Since this is a library implementation detail, libtool hides the complexity of PIC compiler 
+flags by using separate library object files (which end in ‘.lo’ instead of ‘.o’). On 
+systems without shared libraries (or without special PIC compiler flags), these library 
+object files are identical to “standard” object files.
 ```
 
 - `.a` : 静态库文件archive，`.a` 是好多个`.o`合在一起,用于静态连接 ，即`STATIC mode`，多个`.a`可以链接生成一个exe的可执行文件  
@@ -447,9 +486,16 @@ options|描述
 •	`-( archives -)`  
 `--start-group archives --end-group`
 ```
-The archives should be a list of archive files. They may be either explicit file names, or -l options.
-The specified archives are searched repeatedly until no new undefined references are created. Normally, an archive is searched only once in the order that it is specified on the command line. If a symbol in that archive is needed to resolve an undefined symbol referred to by an object in an archive that appears later on the command line, the linker would not be able to resolve that reference. By grouping the archives, they all be searched repeatedly until all possible references are resolved.
-Using this option has a significant performance cost. It is best to use it only when there are unavoidable circular references between two or more archives.
+The archives should be a list of archive files. They may be either explicit file names, or 
+-l options.
+The specified archives are searched repeatedly until no new undefined references are 
+created. Normally, an archive is searched only once in the order that it is specified on 
+the command line. If a symbol in that archive is needed to resolve an undefined symbol 
+referred to by an object in an archive that appears later on the command line, the linker 
+would not be able to resolve that reference. By grouping the archives, they all be searched 
+repeatedly until all possible references are resolved.
+Using this option has a significant performance cost. It is best to use it only when there 
+are unavoidable circular references between two or more archives.
 ```
 将反复查找group的archive文件，直到没有未定义的引用出现，以此来解决相互依赖。
 
@@ -474,15 +520,25 @@ vapth使用方法中的`<pattern>`需要包含`%`字符。`%`的意思是匹 配
 ### __attribute__
 
 GCC specific syntaxes 
-- `__attribute__((constructor))` syntax : This particular GCC syntax, when used with a function, executes the same function at the startup of the program, i.e before main() function.
-- `__attribute__((destructor))` syntax : This particular GCC syntax, when used with a function, executes the same function just before the program terminates through _exit, i.e after main() function.
+- `__attribute__((constructor))` syntax : This particular GCC syntax, when used with a 
+function, executes the same function at the startup of the program, i.e before main() 
+function.
+- `__attribute__((destructor))` syntax : This particular GCC syntax, when used with a 
+function, executes the same function just before the program terminates through _exit, i.e 
+after main() function.
 
 Explanation:  
-The way constructors and destructors work is that the shared object file contains special sections (.ctors and .dtors on ELF) which contain references to the functions marked with the constructor and destructor attributes, respectively. When the library is loaded/unloaded, the dynamic loader program checks whether such sections exist, and if so, calls the functions referenced therein.
+The way constructors and destructors work is that the shared object file contains special 
+sections (.ctors and .dtors on ELF) which contain references to the functions marked with 
+the constructor and destructor attributes, respectively. When the library is loaded/unloaded, 
+the dynamic loader program checks whether such sections exist, and if so, calls the 
+functions referenced therein.
 
 Few points regarding these are worth noting :
-- `__attribute__((constructor))` runs when a shared library is loaded, typically during program startup.
-- `__attribute__((destructor))` runs when the shared library is unloaded, typically at program exit.
+- `__attribute__((constructor))` runs when a shared library is loaded, typically during 
+program startup.
+- `__attribute__((destructor))` runs when the shared library is unloaded, typically at 
+program exit.
 - The two parentheses are presumably to distinguish them from function calls.
 - `__attribute__` is a GCC specific syntax;not a function or a macro.
 
@@ -492,11 +548,22 @@ destructor
 constructor (priority)
 destructor (priority)
 ```
-The `constructor` attribute causes the function to be called automatically before execution enters `main()`. Similarly, the destructor attribute causes the function to be called automatically after `main()` has completed or `exit()` has been called. Functions with these attributes are useful for initializing data that will be used implicitly during the execution of the program.  
-You may provide an optional integer priority to control the order in which constructor and destructor functions are run. **A constructor with a smaller priority number runs before a constructor with a larger priority number; the opposite relationship holds for destructors**. So, if you have a constructor that allocates a resource and a destructor that deallocates the same resource, both functions typically have the same priority. The priorities for constructor and destructor functions are the same as those specified for namespace-scope C++ objects (see C++ Attributes).    
+The `constructor` attribute causes the function to be called automatically before execution 
+enters `main()`. Similarly, the destructor attribute causes the function to be called 
+automatically after `main()` has completed or `exit()` has been called. Functions with these 
+attributes are useful for initializing data that will be used implicitly during the execution of 
+the program.  
+You may provide an optional integer priority to control the order in which constructor and 
+destructor functions are run. **A constructor with a smaller priority number runs before a constructor with a larger priority number; the opposite relationship holds for destructors**. 
+So, if you have a constructor that allocates a resource and a destructor that deallocates the 
+same resource, both functions typically have the same priority. The priorities for constructor 
+and destructor functions are the same as those specified for namespace-scope C++ objects (see C++ 
+Attributes).    
 
 These attributes are not currently implemented for Objective-C. 
-The priority values you give **must be greater than 100** as the compiler reserves priority values between 0-100 for implementation. Aconstructor or destructor specified with priority executes before a constructoror destructor specified without priority.   
+The priority values you give **must be greater than 100** as the compiler reserves priority 
+values between 0-100 for implementation. Aconstructor or destructor specified with priority 
+executes before a constructoror destructor specified without priority.   
 
 (1)	Static 不能影响constructor的顺序  
 (2)	Static 变量看起来也在constructor后面才执行 (system dependent)
@@ -551,7 +618,8 @@ static void destroy_navigationBarImages() {
 
 ```
 1.	It's run when a shared library is loaded, typically during program startup.
-2.	That's how all GCC attributes are; presumably to distinguish them from function calls.
+2.	That's how all GCC attributes are; presumably to distinguish them from function calls. 
+
 3.	GCC-specific syntax.
 4.	Yes, this works in C and C++.
 5.	No, the function does not need to be static.
@@ -559,12 +627,36 @@ static void destroy_navigationBarImages() {
 ```
 
 ```
-So, the way the constructors and destructors work is that the shared object file contains special sections (`.ctors` and `.dtors` on ELF) which contain references to the functions marked with the constructor and destructor attributes, respectively. When the library is loaded/unloaded the dynamic loader program (ld.so or somesuch) checks whether such sections exist, and if so, calls the functions referenced therein.
-Come to think of it, there is probably some similar magic in the normal static linker, so that the same code is run on startup/shutdown regardless if the user chooses static or dynamic linking.  
-`.init/.fini` isn't deprecated. It's still part of the the ELF standard and I'd dare say it will be forever. Code in `.init/.fini` is run by the loader/runtime-linker when code is loaded/unloaded. I.e. on each ELF load (for example a shared library) code in `.init` will be run. It's still possible to use that mechanism to achieve about the same thing as with `__attribute__((constructor))/((destructor))`. It's old-school but it has some benefits.  
-`.ctors/.dtors` mechanism for example require support by system-rtl/loader/linker-script. This is far from certain to be available on all systems, for example deeply embedded systems where code executes on bare metal. I.e. even if __attribute__((constructor))/((destructor)) is supported by GCC, it's not certain it will run as it's up to the linker to organize it and to the loader (or in some cases, boot-code) to run it. To use `.init/.fini` instead, the easiest way is to use linker flags: `-init` & `-fini` (i.e. from GCC command line, syntax would be `-Wl -init my_init -fini my_fini`).
+So, the way the constructors and destructors work is that the shared object file contains 
+special sections (`.ctors` and `.dtors` on ELF) which contain references to the functions 
+marked with the constructor and destructor attributes, respectively. 
+When the library is loaded/unloaded the dynamic loader program (ld.so or somesuch) checks 
+whether such sections exist, and if so, calls the functions referenced therein. 
 
-`.ctors/.dtors` mechanism for example require support by system-rtl/loader/linker-script. This is far from certain to be available on all systems, for example deeply embedded systems where code executes on bare metal. I.e. even if `__attribute__((constructor))/((destructor))` is supported by GCC, it's not certain it will run as it's up to the linker to organize it and to the loader (or in some cases, boot-code) to run it. To use .init/.fini instead, the easiest way is to use linker flags: `-init` & `-fini` (i.e. from GCC command line, syntax would be `-Wl -init my_init -fini my_fini`).
+Come to think of it, there is probably some similar magic in the normal static linker, 
+so that the same code is run on startup/shutdown regardless if the user chooses static or 
+dynamic linking.  
+`.init/.fini` isn't deprecated. It's still part of the the ELF standard and I'd dare say 
+it will be forever. Code in `.init/.fini` is run by the loader/runtime-linker when code is 
+loaded/unloaded. I.e. on each ELF load (for example a shared library) code in `.init` will be run. 
+It's still possible to use that mechanism to achieve about the same thing as with 
+`__attribute__((constructor))/((destructor))`. It's old-school but it has some benefits.  
+
+`.ctors/.dtors` mechanism for example require support by system-rtl/loader/linker-script. 
+This is far from certain to be available on all systems, for example deeply embedded systems 
+where code executes on bare metal. I.e. even if __attribute__((constructor))/((destructor)) is 
+supported by GCC, it's not certain it will run as it's up to the linker to organize it and to 
+the loader (or in some cases, boot-code) to run it. To use `.init/.fini` instead, 
+the easiest way is to use linker flags: `-init` & `-fini` (i.e. from GCC command line, 
+syntax would be `-Wl -init my_init -fini my_fini`).
+
+`.ctors/.dtors` mechanism for example require support by system-rtl/loader/linker-script. 
+This is far from certain to be available on all systems, for example deeply embedded systems 
+where code executes on bare metal. I.e. even if `__attribute__((constructor))/((destructor))` 
+is supported by GCC, it's not certain it will run as it's up to the linker to organize it and 
+to the loader (or in some cases, boot-code) to run it. To use .init/.fini instead, the easiest 
+way is to use linker flags: `-init` & `-fini` (i.e. from GCC command line, syntax would be 
+`-Wl -init my_init -fini my_fini`).
 ```
 
 ```
@@ -590,12 +682,16 @@ $ ./main
 
 You can try doing the following:
 - Find out what dependencies are missing with `ldd <executable>`.  
-- If you don’t identify them, you can check if they are direct dependencies by running `readelf -d <executable> | grep NEEDED`.  
-- Make sure the dependencies actually exist. Maybe you forgot to compile them or move them to a libs directory?  
+- If you don’t identify them, you can check if they are direct dependencies by running 
+`readelf -d <executable> | grep NEEDED`.  
+- Make sure the dependencies actually exist. Maybe you forgot to compile them or move them 
+to a libs directory?  
 - Find out where dependencies are searched by using `LD_DEBUG=libs ldd <executable>`.  
 - If you need to add a directory to the search:
     - Ad-hoc: add the directory to the LD_LIBRARY_PATH environment variable.
-    - Baked in the file: add the directory to the executable or shared library’s rpath or runpath by passing `-Wl,-rpath,<dir>` (for `rpath`) or `-Wl,--enable-new-dtags`,`-rpath,<dir>`(for `runpath`). Use `$ORIGIN` for paths relative to the executable. 
+    - Baked in the file: add the directory to the executable or shared library’s rpath or 
+    runpath by passing `-Wl,-rpath,<dir>` (for `rpath`) or `-Wl,--enable-new-dtags`,`-rpath,
+    <dir>`(for `runpath`). Use `$ORIGIN` for paths relative to the executable. 
 
 - If `ldd` shows that no dependencies are missing, see if your application has elevated privileges. If so, `ldd` might lie. See security concerns above.
 
@@ -617,23 +713,34 @@ Valid options for the LD_DEBUG environment variable are:
 - `unused`      determined unused DSOs
 - `help`        display this help message and exit
 
-To direct the debugging output into a file instead of standard output a filename can be specified using the `LD_DEBUG_OUTPUT` environment variable.
+To direct the debugging output into a file instead of standard output a filename can be 
+specified using the `LD_DEBUG_OUTPUT` environment variable.
 
 ### ld.so
 http://man7.org/linux/man-pages/man8/ld.so.8.html
-If a shared object dependency does not contain a slash, then it is searched for in the following order:
+If a shared object dependency does not contain a slash, then it is searched for in the 
+following order:
 
-- Using the directories specified in the DT_RPATH dynamic section attribute of the binary if present and DT_RUNPATH attribute does not exist.  Use of DT_RPATH is deprecated.
+- Using the directories specified in the DT_RPATH dynamic section attribute of the binary if 
+present and DT_RUNPATH attribute does not exist.  Use of DT_RPATH is deprecated.
 
-- Using the environment variable `LD_LIBRARY_PATH`, unless the executable is being run in secure-execution mode (see below), in which case this variable is ignored.
+- Using the environment variable `LD_LIBRARY_PATH`, unless the executable is being run in 
+secure-execution mode (see below), in which case this variable is ignored.
 
-- Using the directories specified in the `DT_RUNPATH` dynamic section  attribute of the binary if present.  Such directories are searched  only to find those objects required by `DT_NEEDED` (direct
-dependencies) entries and do not apply to those objects' children, which must themselves have their own DT_RUNPATH entries.  This is  unlike DT_RPATH, which is applied to searches for all children in
+- Using the directories specified in the `DT_RUNPATH` dynamic section  attribute of the binary 
+if present.  Such directories are searched  only to find those objects required by `DT_NEEDED` (direct dependencies) entries and do not apply to those objects' children, which must themselves 
+have their own DT_RUNPATH entries.  This is  unlike DT_RPATH, which is applied to searches for 
+all children in
 the dependency tree.
 
-- From the cache file `/etc/ld.so.cache`, which contains a compiled list of candidate shared objects previously found in the augmented library path.  If, however, the binary was linked with the -z nodeflib linker option, shared objects in the default paths are skipped.  Shared objects installed in hardware capability directories (see below) are preferred to other shared objects.
+- From the cache file `/etc/ld.so.cache`, which contains a compiled list of candidate shared 
+objects previously found in the augmented library path.  If, however, the binary was linked with 
+the -z nodeflib linker option, shared objects in the default paths are skipped.  Shared objects 
+installed in hardware capability directories (see below) are preferred to other shared objects.
 
-- In the default path `/lib`, and then `/usr/lib`.  (On some 64-bit  architectures, the default paths for 64-bit shared objects are  `/lib64`, and then `/usr/lib64`.)  If the binary was linked with the -z nodeflib linker option, this step is skipped.
+- In the default path `/lib`, and then `/usr/lib`.  (On some 64-bit  architectures, the default 
+paths for 64-bit shared objects are  `/lib64`, and then `/usr/lib64`.)  If the binary was linked 
+with the -z nodeflib linker option, this step is skipped.
 
 
 

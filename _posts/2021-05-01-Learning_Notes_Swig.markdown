@@ -10,10 +10,24 @@ tags: [Learning-Note]
 ## 1.	Introduction
 `SWIG (Simplified Wrapper and Interface Generator)`
 ```
-SWIG is a software development tool that connects programs written in C and C++ with a variety of high-level programming languages. SWIG is used with different types of target languages including common scripting languages such as Javascript, Perl, PHP, Python, Tcl and Ruby.  
-SWIG is most commonly used to create high-level interpreted or compiled programming environments, user interfaces, and as a tool for testing and prototyping C/C++ software. SWIG is typically used to parse C/C++ interfaces and generate the 'glue code' required for the above target languages to call into the C/C++ code. SWIG can also export its parse tree in the form of XML and Lisp s-expressions.   
-SWIG is free software and the code that SWIG generates is compatible with both commercial and non-commercial projects.
-It works by taking the declarations found in C/C++ header files and using them to generate the wrapper code that scripting languages need to access the underlying C/C++ code.
+SWIG is a software development tool that connects programs written in 
+C and C++ with a variety of high-level programming languages. SWIG is 
+used with different types of target languages including common 
+scripting languages such as Javascript, Perl, PHP, Python, Tcl and 
+Ruby.  
+SWIG is most commonly used to create high-level interpreted or 
+compiled programming environments, user interfaces, and as a tool for 
+testing and prototyping C/C++ software. SWIG is typically used to 
+parse C/C++ interfaces and generate the 'glue code' required for the 
+above target languages to call into the C/C++ code. SWIG can also 
+export its parse tree in the form of XML and Lisp s-expressions.  
+
+SWIG is free software and the code that SWIG generates is compatible 
+with both commercial and non-commercial projects.
+
+It works by taking the declarations found in C/C++ header files and 
+using them to generate the wrapper code that scripting languages need 
+to access the underlying C/C++ code.
 ```
 
 ## 2.	Getting Start
@@ -65,10 +79,13 @@ let's say you have them in a file `example.c`
  gcc -shared example.o example_wrap.o -o example.so
 ```
 
-The swig command produces a file `example_wrap.c` that should be compiled and linked with the rest of the program.  
-Everything in the `%{ ... %}` block is simply copied verbatim to the resulting wrapper file created by SWIG, 类似声明，包括头文件和声明。
+The swig command produces a file `example_wrap.c` that should be 
+compiled and linked with the rest of the program.  
+Everything in the `%{ ... %}` block is simply copied verbatim to the 
+resulting wrapper file created by SWIG, 类似声明，包括头文件和声明。
 
-On most machines, C++ extension modules should be linked using the C++ compiler. For example:
+On most machines, C++ extension modules should be linked using the C++ 
+compiler. For example:
 
 ```
 % swig -c++ -tcl example.i
@@ -90,7 +107,8 @@ $ c++ -fpic -c $(SRCS)
 $ c++ -shared $(OBJS) -o module.so
 ```
 
-If you are using GCC 4.x under Ubuntu and using python 2.6 try the following   
+If you are using GCC 4.x under Ubuntu and using python 2.6 try the 
+following   
 ```
 $ swig -python module.i
 $ gcc -fpic -I/usr/include/python2.6 -c module_wrap.c
@@ -99,9 +117,12 @@ $ gcc -shared module_wrap.o -o module.so
 
 - **Noun interpretation**   
    - `.i`  --  SWIG interface file(a special .i or .swg suffix)
-   - `.wrap.cpp` – wrapper function, write a special "wrapper" function that serves as the glue between the interpreter and the underlying C function
+   - `.wrap.cpp` – wrapper function, write a special "wrapper" function that serves as the glue between the interpreter and the 
+   underlying C function
 
-By default, an input file with the name `file.i` is transformed into a file `file_wrap.c` or `file_wrap.cxx` (depending on whether or not the `-c++` option has been used).
+By default, an input file with the name `file.i` is transformed into a 
+file `file_wrap.c` or `file_wrap.cxx` (depending on whether or not the 
+`-c++` option has been used).
 
 
 **Note**:   

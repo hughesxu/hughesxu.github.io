@@ -8,9 +8,13 @@ tags: [Learning-Note]
 
 ## Python 脚本初窥   
 ```
-#!/usr/bin/python		// 告诉操作系统执行这个脚本的时候，调用 /usr/bin 下的 python 解释器
+#!/usr/bin/python		
+// 告诉操作系统执行这个脚本的时候，调用 /usr/bin 下的 python 解释器
 print "Hello, Python!";
-#!/usr/bin/env python	// 这种用法是为了防止操作系统用户没有将 python 装在默认的 /usr/bin 路径里。当系统看到这一行的时候，首先会到 env 设置里查找 python 的安装路径，再调用对应路径下的解释器程序完成操作。
+#!/usr/bin/env python
+// 这种用法是为了防止操作系统用户没有将 python 装在默认的 /usr/bin 路径 
+// 里。当系统看到这一行的时候，首先会到 env 设置里查找 python 的安装路径，
+// 再调用对应路径下的解释器程序完成操作。
 ```
 
 
@@ -22,16 +26,16 @@ print "Hello, Python!";
 
 ### 2.2 保留字（关键字）
 ```
-and	        exec	    not
-assert	    finally	    or
-break	    for	        pass
-class	    from	    print
-continue	global	    raise
-def	        if	        return
-del	        import	    try
-elif	    in	        while
-else	    is	        with
-except	    lambda	    yield
+and         exec        not
+assert      finally     or
+break       for         pass
+class       from        print
+continue    global      raise
+def         if          return
+del         import      try
+elif        in          while
+else        is          with
+except      lambda      yield
 ```
 
 ### 2.3 引号
@@ -88,13 +92,24 @@ Python支持四种不同的数字类型：
 ```
 import math
 dir(math)
-['__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__', 'acos', 'acosh', 'asin', 'asinh', 'atan', 'atan2', 'atanh', 'ceil', 'copysign', 'cos', 'cosh', 'degrees', 'e', 'erf', 'erfc', 'exp', 'expm1', 'fabs', 'factorial', 'floor', 'fmod', 'frexp', 'fsum', 'gamma', 'gcd', 'hypot', 'inf', 'isclose', 'isfinite', 'isinf', 'isnan', 'ldexp', 'lgamma', 'log', 'log10', 'log1p', 'log2', 'modf', 'nan', 'pi', 'pow', 'radians', 'sin', 'sinh', 'sqrt', 'tan', 'tanh', 'tau', 'trunc']
+['__doc__', '__file__', '__loader__', '__name__', '__package__', 
+'__spec__', 'acos', 'acosh', 'asin', 'asinh', 'atan', 'atan2', 
+'atanh', 'ceil', 'copysign', 'cos', 'cosh', 'degrees', 'e', 'erf', 
+'erfc', 'exp', 'expm1', 'fabs', 'factorial', 'floor', 'fmod', 
+'frexp', 'fsum', 'gamma', 'gcd', 'hypot', 'inf', 'isclose', 
+'isfinite', 'isinf', 'isnan', 'ldexp', 'lgamma', 'log', 'log10', 
+'log1p', 'log2', 'modf', 'nan', 'pi', 'pow', 'radians', 'sin', 
+'sinh', 'sqrt', 'tan', 'tanh', 'tau', 'trunc']
 ```
 
 ```
 import cmath  
 dir(cmath)  
-['__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__', 'acos', 'acosh', 'asin', 'asinh', 'atan', 'atanh', 'cos', 'cosh', 'e', 'exp', 'inf', 'infj', 'isclose', 'isfinite', 'isinf', 'isnan', 'log', 'log10', 'nan', 'nanj', 'phase', 'pi', 'polar', 'rect', 'sin', 'sinh', 'sqrt', 'tan', 'tanh', 'tau']
+['__doc__', '__file__', '__loader__', '__name__', '__package__', 
+'__spec__', 'acos', 'acosh', 'asin', 'asinh', 'atan', 'atanh', 'cos', 
+'cosh', 'e', 'exp', 'inf', 'infj', 'isclose', 'isfinite', 'isinf', 
+'isnan', 'log', 'log10', 'nan', 'nanj', 'phase', 'pi', 'polar', 
+'rect', 'sin', 'sinh', 'sqrt', 'tan', 'tanh', 'tau']
 ```
 
 
@@ -254,7 +269,8 @@ print "My name is %s and weight is %d kg!" % ('Zara', 21)
 'world hello world'
 
 print("网站名：{name}, 地址 {url}".format(name="菜鸟教程", url="www.runoob.com"))
-		# 必须是”=”连接，和字典区分开
+
+# 必须是”=”连接，和字典区分开
 # 通过字典设置参数
 site = {"name": "菜鸟教程", "url": "www.runoob.com"}
 print("网站名：{name}, 地址 {url}".format(**site))		# **是必须要加的
