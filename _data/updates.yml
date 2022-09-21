@@ -2,6 +2,27 @@
   filename: 'Linux_Process_Memory_Detect'
   lastmod: '2022-05-09 09:37:33 +0800'
 -
+  filename: 'Learning_Notes_TCL'
+  lastmod: '2022-09-11 21:55:24 +0800'
+-
+  filename: 'Learning_Notes_Swig'
+  lastmod: '2022-09-11 21:55:24 +0800'
+-
+  filename: 'Learning_Notes_Shell_Script'
+  lastmod: '2022-09-21 09:56:29 +0800'
+-
+  filename: 'Learning_Notes_Python'
+  lastmod: '2022-09-11 21:55:24 +0800'
+-
+  filename: 'Learning_Notes_Makefile'
+  lastmod: '2022-09-11 21:55:24 +0800'
+-
+  filename: 'Learning_Notes_Expect'
+  lastmod: '2022-09-11 21:55:24 +0800'
+-
+  filename: 'Learning_Notes_CMake'
+  lastmod: '2022-09-21 09:56:29 +0800'
+-
   filename: 'Linux_poll_select'
   lastmod: '2021-02-24 14:08:29 +0800'
 -
