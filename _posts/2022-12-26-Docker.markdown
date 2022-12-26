@@ -8,7 +8,7 @@ tags: [Linux]
 ## 简述
 
 有些场合需要在docker环境通过gitlab下载代码，查询资料，在docker build时可以使用SSH private key，详细可以参考：  
-[Build Docker时使用SSH Private Key的新玩法](https://xfyuan.github.io/2020/10/build-docker-with-private-ssh-key/)
+[Build Docker时使用SSH Private Key的新玩法](https://xfyuan.github.io/2020/10/build-docker-with-private-ssh-key/)   
 [Securely using SSH keys in Docker to access private Github repositories](https://fastruby.io/blog/docker/docker-ssh-keys.html)
 
 

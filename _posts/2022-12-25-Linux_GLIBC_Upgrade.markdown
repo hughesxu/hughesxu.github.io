@@ -15,10 +15,10 @@ tags: [Linux]
 
 GLIBC是Linux系统中最底层的API，最主要的功能是对系统调用进行了封装，几乎其他任何的运行库都要依赖glibc。因此，切勿擅自通过编译的方式升级，容易将系统搞坏。
 
-升级glibc主要是对/lib库中的libc.so.6，libm.so.6， libpthread.so.0和librt.so.1这四个文件的修改。
+升级glibc主要是对`/lib`库中的`libc.so.6`，`libm.so.6`， `libpthread.so.0`和`librt.so.1`这四个文件的修改。
 
 
 ## 参考资料
 
-[https://blog.csdn.net/qq_42721097/article/details/120916145](https://blog.csdn.net/qq_42721097/article/details/120916145)
+[https://blog.csdn.net/qq_42721097/article/details/120916145](https://blog.csdn.net/qq_42721097/article/details/120916145)   
 [记GLIBC升级失败后的恢复](https://blog.koko.vc/a/33/%E8%AE%B0GLIBC%E5%8D%87%E7%BA%A7%E5%A4%B1%E8%B4%A5%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D)
