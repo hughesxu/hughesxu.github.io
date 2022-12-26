@@ -1,0 +1,17 @@
+---
+title:  "Docker实践简要笔记"
+date:   2022-12-26 09:00:00 +0800
+categories: [Linux, docker]
+tags: [Linux]
+---
+
+## 简述
+
+有些场合需要在docker环境通过gitlab下载代码，查询资料，在docker build时可以使用SSH private key，详细可以参考：  
+[Build Docker时使用SSH Private Key的新玩法](https://xfyuan.github.io/2020/10/build-docker-with-private-ssh-key/)
+[Securely using SSH keys in Docker to access private Github repositories](https://fastruby.io/blog/docker/docker-ssh-keys.html)
+
+
+## 参考资料
+
+[Docker从入门到实践](https://yeasy.gitbook.io/docker_practice)
