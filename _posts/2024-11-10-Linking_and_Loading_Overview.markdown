@@ -12,7 +12,7 @@ C/C++程序需要经过代码编写、编译、链接等过程生成可执行文
 ## 初始ELF文件格式
 
 从[字节跳动Android PLT hook 方案 ByteHook](https://mp.weixin.qq.com/s/9-fmlN8_bQYjN5sRzL4fTg)中看到一个很好的总览ELF文件格式的图，在此直接借用下：  
-![ELF file format overview]({{ "(/assets/img/sample/ELF_file_format_overview.jpeg)"| relative_url }})
+![ELF file format overview]({{ "/assets/img/sample/ELF_file_format_overview.jpeg"| relative_url }})
 
 ELF文件格式从链接视图和执行视图两种角度对文件数据进行划分：  
 - `链接视图（Linking View）`：以 section 为单位组织数据
@@ -26,7 +26,7 @@ ELF文件格式从链接视图和执行视图两种角度对文件数据进行�
 这个过程还会涉及到`相似段合并`，比如将所有输入文件的“.text”合并到输出文件的“.text”，接着是“.data”段、“.bss”段等。
 - `第二步：符号解析与重定位`  
 使用第一步中收集到的信息，读取输入文件中段的数据、重定位信息，并且进行符号解析`重定位`、调整代码中的地址等  
-![Object File and Process Memory Space]({{ "(/assets/img/sample/Object_File_and_Process_Memory_Space.jpg)"| relative_url }})  
+![Object File and Process Memory Space]({{ "/assets/img/sample/Object_File_and_Process_Memory_Space.jpg"|relative_url }})  
 
 对于同一个目标文件，其中各个段的起始虚拟地址不同，由`相似段合并`过程决定。  
 
@@ -96,11 +96,11 @@ P = 被修正的位置（相对于段开始的偏移量或者虚拟地址）
 
 **类型2：模块内部的数据访问**  
 数据的相对寻址没有相对于当前`指令地址(PC)`的寻址方式，因此ELF采用一种巧妙的方式获得当前PC值。  
-![Dynamic linker data access inside module]({{ "(/assets/img/sample/DL_data_access_inside_module.jpg)"| relative_url }}) 
+![Dynamic linker data access inside module]({{ "/assets/img/sample/DL_data_access_inside_module.jpg"| relative_url }}) 
 
 **类型3：模块外部的数据调用**  
 基本思想：把跟地址相关的部分放在数据段里面。具体做法：在数据段里建立一个`指向全局变量的指针数组`，也称为`全局偏移表（Global Offset Table，GOT）`，当代码需要引用该全局变量时，通过GOT相应的项间接引用。  
-![Dynamic linker data access external module]({{ "(/assets/img/sample/DL_data_access_external_module.jpg)"| relative_url }}) 
+![Dynamic linker data access external module]({{ "/assets/img/sample/DL_data_access_external_module.jpg"| relative_url }}) 
 
 
 **类型4：模块外部的函数访问**  
@@ -135,7 +135,7 @@ jump _dl_runtime_resolve
 ```
 `push n`中数字时bar符号在重定位表`.rel.plt`中的下标，`_dl_runtime_resolve`实际执行`lookp(module, function)`查找符号地址，最终将`bar()`的真正地址填入到`bar@GOT`中。一旦`bar()`函数解析完成，再次调用`bar@plt`时，第一条jmp指令就能跳转到真正的`bar()`函数。  
 ELF将GOT拆分为`.got`和`.got.plt`，其中`.got`保存全局变量引用的地址，`.got.plt`用来保存函数引用的地址。  
-![Dynamic linker GOT PLT structure]({{ "(/assets/img/sample/DL_GOT_PLT.jpg)"| relative_url }}) 
+![Dynamic linker GOT PLT structure]({{ "/assets/img/sample/DL_GOT_PLT.jpg"| relative_url }}) 
 
 
 ### 动态链接相关结构
