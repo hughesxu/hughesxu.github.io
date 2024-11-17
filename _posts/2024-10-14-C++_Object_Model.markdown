@@ -1,5 +1,5 @@
 ---
-title:  "C++内存模型实践探索"
+title:  "C++对象模型实践探索"
 date:   2024-10-14 09:00:00 +0800
 categories: [Language, C++]
 tags: [C++]
