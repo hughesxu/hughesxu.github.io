@@ -13,7 +13,6 @@ C/C++程序需要经过代码编写、编译、链接等过程生成可执行文
 
 从[字节跳动Android PLT hook 方案 ByteHook](https://mp.weixin.qq.com/s/9-fmlN8_bQYjN5sRzL4fTg)中看到一个很好的总览ELF文件格式的图，在此直接借用下：  
 ![ELF file format overview]({{ "/assets/img/sample/ELF_file_format_overview.jpeg"| relative_url }})
-![Single Derive Object Layout]({{ "/assets/img/sample/C++_Model_Single_Derive_vtable.png"| relative_url }})
 
 ELF文件格式从链接视图和执行视图两种角度对文件数据进行划分：  
 - `链接视图（Linking View）`：以 section 为单位组织数据
